@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,8C26,8 8,26 8,48s18,40 40,40 40-18 40-40S70,8 48,8z" />
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M48,18C31.4,18 18,31.4 18,48s13.4,30 30,30 30-13.4 30-30S64.6,18 48,18z" />
+    <!-- Dollar sign / smart spend symbol -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,28 L48,32 M48,64 L48,68 M40,36 C40,33.8 43.6,32 48,32 C52.4,32 56,33.8 56,36 C56,38.2 53,39.6 48,42 C43,44.4 40,46.2 40,49 C40,51.8 43.6,54 48,54 C52.4,54 56,52.2 56,49"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Trend arrow -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,60 L44,52 L50,57 L62,47"
+        android:strokeColor="#FBBF24"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M58,44 L62,44 L62,48 Z" />
+</vector>

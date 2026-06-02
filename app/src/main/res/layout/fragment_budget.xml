@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/android:colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="52dp"
+            android:paddingBottom="16dp"
+            android:elevation="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Budget Planner"
+                android:textSize="24sp"
+                android:fontFamily="@font/poppins_bold"
+                android:textColor="?attr/colorOnSurface" />
+        </LinearLayout>
+
+        <!-- Overview Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_spent_so_far"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Spent: ₹0"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textColor="@color/expense_red" />
+
+                    <TextView
+                        android:id="@+id/tv_remaining_budget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Remaining: ₹0"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textColor="@color/expense_green" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress_overall_budget"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="12dp"
+                    android:progress="0"
+                    android:max="100"
+                    android:progressTint="@color/colorPrimary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Set Budget Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Monthly Budget"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Total Budget -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_total_budget"
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Total Monthly Budget (₹)"
+                    app:startIconDrawable="@drawable/ic_budget">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_total_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppins_semibold" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Category Budgets -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category Budgets (optional)"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="@color/textSecondary"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Food -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Food Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_food">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_food_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Travel -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Travel Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_travel">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_travel_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Shopping -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Shopping Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_shopping">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_shopping_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Bills -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bills Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_bills">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_bills_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Entertainment -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Entertainment Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_entertainment">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_entertainment_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Healthcare -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/SmartSpend.TextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Healthcare Budget"
+                    android:layout_marginBottom="8dp"
+                    app:startIconDrawable="@drawable/ic_health">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_healthcare_budget"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Alert switches -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_alert_80"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Alert at 80% of budget"
+                    android:checked="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:layout_marginTop="8dp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_alert_100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Alert when budget exceeded"
+                    android:checked="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:layout_marginTop="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_save_budget"
+                    style="@style/SmartSpend.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:text="Save Budget"
+                    android:layout_marginTop="16dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Category Progress -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category Progress"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Food progress -->
+                <TextView android:id="@+id/tv_food_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_food"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_food" android:layout_marginBottom="12dp" />
+
+                <!-- Travel progress -->
+                <TextView android:id="@+id/tv_travel_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_travel"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_travel" android:layout_marginBottom="12dp" />
+
+                <!-- Shopping progress -->
+                <TextView android:id="@+id/tv_shopping_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_shopping"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_shopping" android:layout_marginBottom="12dp" />
+
+                <!-- Bills progress -->
+                <TextView android:id="@+id/tv_bills_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_bills"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_bills" android:layout_marginBottom="12dp" />
+
+                <!-- Entertainment progress -->
+                <TextView android:id="@+id/tv_entertainment_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_entertainment"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_entertainment" android:layout_marginBottom="12dp" />
+
+                <!-- Healthcare progress -->
+                <TextView android:id="@+id/tv_healthcare_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:textSize="13sp"
+                    android:fontFamily="@font/poppins_regular" android:textColor="@color/textSecondary"
+                    android:layout_marginBottom="4dp" />
+                <ProgressBar android:id="@+id/progress_healthcare"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="8dp"
+                    android:progressTint="@color/category_healthcare" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

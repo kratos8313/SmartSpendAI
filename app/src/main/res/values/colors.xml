@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="colorPrimary">#4F46E5</color>
+    <color name="colorPrimaryDark">#3730A3</color>
+    <color name="colorPrimaryLight">#818CF8</color>
+    <color name="colorPrimaryContainer">#EEF2FF</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+
+    <!-- Secondary -->
+    <color name="colorSecondary">#7C3AED</color>
+    <color name="colorSecondaryDark">#5B21B6</color>
+    <color name="colorSecondaryContainer">#EDE9FE</color>
+
+    <!-- Accent -->
+    <color name="colorAccent">#06B6D4</color>
+
+    <!-- Surfaces -->
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#F8FAFC</color>
+    <color name="colorBackground">#F1F5F9</color>
+    <color name="colorOnSurface">#0F172A</color>
+    <color name="colorOnBackground">#1E293B</color>
+
+    <!-- Dark theme surfaces -->
+    <color name="colorSurfaceDark">#1E293B</color>
+    <color name="colorBackgroundDark">#0F172A</color>
+    <color name="colorCardDark">#1E293B</color>
+
+    <!-- Text -->
+    <color name="textPrimary">#0F172A</color>
+    <color name="textSecondary">#64748B</color>
+    <color name="textHint">#94A3B8</color>
+    <color name="textOnDark">#F8FAFC</color>
+
+    <!-- Expense Status Colors -->
+    <color name="expense_red">#EF4444</color>
+    <color name="expense_green">#10B981</color>
+    <color name="expense_orange">#F59E0B</color>
+    <color name="expense_blue">#3B82F6</color>
+
+    <!-- Category Colors -->
+    <color name="category_food">#FF6B6B</color>
+    <color name="category_travel">#4ECDC4</color>
+    <color name="category_shopping">#45B7D1</color>
+    <color name="category_bills">#96CEB4</color>
+    <color name="category_entertainment">#FBBF24</color>
+    <color name="category_healthcare">#A78BFA</color>
+    <color name="category_other">#94A3B8</color>
+
+    <!-- Insight Card Colors -->
+    <color name="insight_warning">#FFF7ED</color>
+    <color name="insight_success">#F0FDF4</color>
+    <color name="insight_info">#EFF6FF</color>
+    <color name="insight_neutral">#F8FAFC</color>
+
+    <!-- Gradients -->
+    <color name="gradient_start">#4F46E5</color>
+    <color name="gradient_end">#7C3AED</color>
+
+    <!-- Divider -->
+    <color name="divider">#E2E8F0</color>
+    <color name="divider_dark">#334155</color>
+
+    <!-- Splash -->
+    <color name="splash_background">#4F46E5</color>
+
+    <!-- Card -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_stroke">#E2E8F0</color>
+</resources>

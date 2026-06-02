@@ -1,0 +1,96 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme -->
+    <style name="Theme.SmartSpendAI" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnPrimary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <!-- Splash theme -->
+    <style name="Theme.SmartSpendAI.Splash" parent="Theme.SmartSpendAI">
+        <item name="android:statusBarColor">@color/splash_background</item>
+        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Auth theme -->
+    <style name="Theme.SmartSpendAI.Auth" parent="Theme.SmartSpendAI">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Card style -->
+    <style name="SmartSpend.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+    </style>
+
+    <!-- Button style -->
+    <style name="SmartSpend.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">52dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+    </style>
+
+    <!-- TextInput style -->
+    <style name="SmartSpend.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/divider</item>
+    </style>
+
+    <!-- Chip style -->
+    <style name="SmartSpend.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">20dp</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Bottom Navigation -->
+    <style name="SmartSpend.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="itemActiveIndicatorStyle">@style/SmartSpend.BottomNav.ActiveIndicator</item>
+    </style>
+
+    <style name="SmartSpend.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/colorPrimaryContainer</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="SmartSpend.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/colorSurface</item>
+        <item name="titleTextAppearance">@style/SmartSpend.ToolbarTitle</item>
+    </style>
+
+    <style name="SmartSpend.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+    </style>
+
+    <!-- FAB -->
+    <style name="SmartSpend.FAB" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="tint">@color/colorOnPrimary</item>
+        <item name="shapeAppearance">@style/SmartSpend.FAB.Shape</item>
+    </style>
+
+    <style name="SmartSpend.FAB.Shape" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+</resources>

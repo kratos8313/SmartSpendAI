@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_height">52dp</dimen>
+    <dimen name="button_corner_radius">12dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_xs">11sp</dimen>
+    <dimen name="text_sm">13sp</dimen>
+    <dimen name="text_md">15sp</dimen>
+    <dimen name="text_lg">17sp</dimen>
+    <dimen name="text_xl">22sp</dimen>
+    <dimen name="text_xxl">28sp</dimen>
+    <dimen name="text_display">36sp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_sm">18dp</dimen>
+    <dimen name="icon_md">24dp</dimen>
+    <dimen name="icon_lg">32dp</dimen>
+    <dimen name="icon_xl">48dp</dimen>
+
+    <!-- Category icon container -->
+    <dimen name="category_icon_size">44dp</dimen>
+    <dimen name="category_icon_radius">12dp</dimen>
+
+    <!-- Bottom navigation -->
+    <dimen name="bottom_nav_height">72dp</dimen>
+
+    <!-- FAB -->
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Chart -->
+    <dimen name="chart_height">240dp</dimen>
+    <dimen name="pie_chart_height">280dp</dimen>
+</resources>

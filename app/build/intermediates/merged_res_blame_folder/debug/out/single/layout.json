@@ -1,0 +1,54 @@
+[
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/fragment_dashboard.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/item_insight.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/item_insight.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/fragment_budget.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_budget.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/fragment_analytics.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_analytics.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_settings.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_receipt_scanner.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_receipt_scanner.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_splash.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/fragment_expenses.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_expenses.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_main.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_auth.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_auth.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/item_expense.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/item_expense.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/fragment_insights.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_insights.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-mergeDebugResources-71:/layout/activity_add_expense.xml",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_add_expense.xml"
+    }
+]

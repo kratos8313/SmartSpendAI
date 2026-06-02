@@ -1,0 +1,326 @@
+[
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/color_bottom_nav_color.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/color/bottom_nav_color.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/font_poppins_medium.ttf.flat",
+        "source": "com.smartspend.ai.app-main-74:/font/poppins_medium.ttf"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_splash.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_item_insight.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/item_insight.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/anim_slide_down.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/anim/slide_down.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xhdpi_ic_launcher.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_notes.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_notes.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_camera.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_camera.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_receipt_scanner.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_receipt_scanner.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/anim_fade_out_slow.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/anim/fade_out_slow.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_health.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_health.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_entertainment.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_entertainment.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/anim_fade_out_fast.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/anim/fade_out_fast.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-hdpi_ic_launcher.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-hdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_stat_chip.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_stat_chip.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_payment.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_payment.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_fragment_budget.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_budget.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_settings.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_trend.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_trend.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/font_poppins_bold.ttf.flat",
+        "source": "com.smartspend.ai.app-main-74:/font/poppins_bold.ttf"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-hdpi_ic_launcher_round.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-hdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_add.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_add.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/font_poppins_semibold.ttf.flat",
+        "source": "com.smartspend.ai.app-main-74:/font/poppins_semibold.ttf"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_empty_expenses.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_empty_expenses.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_location.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_location.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xxhdpi_ic_launcher_round.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xxhdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_export.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_export.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_arrow_right.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_arrow_right.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/xml_data_extraction_rules.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_lock.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_lock.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_budget.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_budget.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_search.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_search.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_fragment_dashboard.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_shopping.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_shopping.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_fragment_insights.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_insights.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_auth.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_auth.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_settings.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/font_poppins_regular.ttf.flat",
+        "source": "com.smartspend.ai.app-main-74:/font/poppins_regular.ttf"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_food.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_food.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_trophy.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_trophy.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_warning.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_warning.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_circle_dot.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/circle_dot.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_auth_header.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_auth_header.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_currency.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_currency.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_insights.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_insights.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_tag.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_tag.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_scan.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_scan.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/anim_slide_up.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/anim/slide_up.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_forecast.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_forecast.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_insights_empty.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_insights_empty.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xxxhdpi_ic_launcher.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xxxhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_fragment_analytics.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_analytics.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_dashboard_header.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_dashboard_header.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_email.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_email.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_notification.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_logo.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_logo.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_avatar.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_avatar.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_mic.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_mic.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_home.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_home.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xhdpi_ic_launcher_round.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xhdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_add_expense.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_add_expense.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_savings.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_savings.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_gallery.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_gallery.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xxxhdpi_ic_launcher_round.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xxxhdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_person.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_person.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_icon_button.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_icon_button.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_travel.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_travel.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_bills.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_bills.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/xml_file_paths.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_activity_main.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_fingerprint.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_fingerprint.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_bg_category_icon.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/bg_category_icon.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_analytics.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_analytics.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/mipmap-xxhdpi_ic_launcher.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/mipmap-xxhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_expense.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_expense.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/xml_backup_rules.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/anim_fade_in_fast.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/anim/fade_in_fast.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_fragment_expenses.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/fragment_expenses.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/drawable_ic_dark_mode.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/drawable/ic_dark_mode.xml"
+    },
+    {
+        "merged": "com.smartspend.ai.app-merged_res-72:/layout_item_expense.xml.flat",
+        "source": "com.smartspend.ai.app-main-74:/layout/item_expense.xml"
+    }
+]
