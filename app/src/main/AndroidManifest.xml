@@ -69,12 +69,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".activities.OnboardingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.SmartSpendAI.Auth" />
-
         <!-- WorkManager -->
         <provider
             android:name="androidx.startup.InitializationProvider"
