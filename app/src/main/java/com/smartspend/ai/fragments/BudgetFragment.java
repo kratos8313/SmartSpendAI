@@ -105,11 +105,13 @@ public class BudgetFragment extends Fragment {
 
                 // Budget alerts
                 if (currentBudget.isAlertAt80() && progress >= 80 && progress < 100) {
-                    NotificationUtils.showBudgetAlert(requireContext(),
+                    NotificationUtils.showBudgetAlertOnce(requireContext(),
+                            currentBudget.getId() + "_80",
                             String.format(Locale.getDefault(),
                                     "You've used %.0f%% of your monthly budget!", progress));
                 } else if (currentBudget.isAlertAt100() && progress >= 100) {
-                    NotificationUtils.showBudgetAlert(requireContext(),
+                    NotificationUtils.showBudgetAlertOnce(requireContext(),
+                            currentBudget.getId() + "_100",
                             "You've exceeded your monthly budget!");
                 }
             }

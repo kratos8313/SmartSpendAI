@@ -10,17 +10,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.smartspend.ai.R;
 import com.smartspend.ai.databinding.ActivitySettingsBinding;
 import com.smartspend.ai.utils.ThemeUtils;
+import com.smartspend.ai.utils.SecurityUtils;
+import com.smartspend.ai.utils.PdfExporter;
+import com.smartspend.ai.models.Expense;
+import com.smartspend.ai.viewmodels.ExpenseViewModel;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.concurrent.Executor;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private ActivitySettingsBinding binding;
+    private List<Expense> currentMonthExpenses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,8 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Settings");
         }
 
+        new ViewModelProvider(this).get(ExpenseViewModel.class).getThisMonthExpenses().observe(this,
+                expenses -> currentMonthExpenses = expenses != null ? expenses : new ArrayList<>());
         loadSettings();
         setupListeners();
     }
@@ -46,6 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
         boolean biometricAvailable = bm.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
                 == BiometricManager.BIOMETRIC_SUCCESS;
         binding.switchBiometric.setEnabled(biometricAvailable);
+        binding.switchBiometric.setChecked(biometricAvailable && SecurityUtils.isBiometricEnabled(this));
         if (!biometricAvailable) {
             binding.tvBiometricStatus.setText("Biometric not available on this device");
         }
@@ -65,7 +76,9 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         binding.switchBiometric.setOnCheckedChangeListener((btn, checked) -> {
+            if (checked == SecurityUtils.isBiometricEnabled(this)) return;
             if (checked) authenticateBiometric();
+            else SecurityUtils.setBiometricEnabled(this, false);
         });
 
         binding.btnLogout.setOnClickListener(v -> {
@@ -86,8 +99,14 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnExportPdf.setOnClickListener(v ->
-                Toast.makeText(this, "Export feature - generating PDF...", Toast.LENGTH_SHORT).show());
+        binding.btnExportPdf.setOnClickListener(v -> {
+            try {
+                Intent share = PdfExporter.exportMonthlyReport(this, currentMonthExpenses);
+                startActivity(Intent.createChooser(share, "Share monthly report"));
+            } catch (Exception error) {
+                Toast.makeText(this, "Could not export report", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void authenticateBiometric() {
@@ -96,10 +115,18 @@ public class SettingsActivity extends AppCompatActivity {
                 new BiometricPrompt.AuthenticationCallback() {
                     @Override
                     public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                        SecurityUtils.setBiometricEnabled(SettingsActivity.this, true);
+                        binding.switchBiometric.setChecked(true);
                         Toast.makeText(SettingsActivity.this, "Biometric enabled!", Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onAuthenticationFailed() {
+                        SecurityUtils.setBiometricEnabled(SettingsActivity.this, false);
+                        binding.switchBiometric.setChecked(false);
+                    }
+                    @Override
+                    public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                        SecurityUtils.setBiometricEnabled(SettingsActivity.this, false);
                         binding.switchBiometric.setChecked(false);
                     }
                 });

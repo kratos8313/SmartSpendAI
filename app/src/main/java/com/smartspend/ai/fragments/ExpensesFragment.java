@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +32,11 @@ public class ExpensesFragment extends Fragment {
     private FragmentExpensesBinding binding;
     private ExpenseViewModel viewModel;
     private ExpenseAdapter adapter;
+    private LiveData<java.util.List<Expense>> activeSource;
+    private final Observer<java.util.List<Expense>> expenseObserver = expenses -> {
+        if (adapter != null) adapter.submitList(expenses);
+        if (binding != null) updateEmptyState(expenses == null || expenses.isEmpty());
+    };
 
     @Nullable
     @Override
@@ -102,10 +109,8 @@ public class ExpensesFragment extends Fragment {
                 if (query.isEmpty()) {
                     observeAllExpenses();
                 } else {
-                    viewModel.searchExpenses(query).observe(getViewLifecycleOwner(), expenses -> {
-                        adapter.submitList(expenses);
-                        updateEmptyState(expenses == null || expenses.isEmpty());
-                    });
+                    observeSource(viewModel.searchExpenses(query));
+
                 }
             }
         });
@@ -141,10 +146,8 @@ public class ExpensesFragment extends Fragment {
         if ("All".equals(category)) {
             observeAllExpenses();
         } else {
-            viewModel.getExpensesByCategory(category).observe(getViewLifecycleOwner(), expenses -> {
-                adapter.submitList(expenses);
-                updateEmptyState(expenses == null || expenses.isEmpty());
-            });
+            observeSource(viewModel.getExpensesByCategory(category));
+
         }
     }
 
@@ -153,12 +156,16 @@ public class ExpensesFragment extends Fragment {
     }
 
     private void observeAllExpenses() {
-        viewModel.getAllExpenses().observe(getViewLifecycleOwner(), expenses -> {
-            adapter.submitList(expenses);
-            updateEmptyState(expenses == null || expenses.isEmpty());
-        });
+        observeSource(viewModel.getAllExpenses());
+
     }
 
+    private void observeSource(LiveData<java.util.List<Expense>> source) {
+        if (activeSource == source) return;
+        if (activeSource != null) activeSource.removeObserver(expenseObserver);
+        activeSource = source;
+        activeSource.observe(getViewLifecycleOwner(), expenseObserver);
+    }
     private void updateEmptyState(boolean isEmpty) {
         binding.layoutEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         binding.rvExpenses.setVisibility(isEmpty ? View.GONE : View.VISIBLE);

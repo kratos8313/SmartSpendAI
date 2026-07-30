@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
+import com.smartspend.ai.utils.MoneyUtils;
+
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 
@@ -30,12 +32,16 @@ public class Expense {
     private String currency;
     private double originalAmount;
     private String originalCurrency;
+    private long updatedAt;
+    private boolean deleted;
 
     public Expense() {
         this.id = java.util.UUID.randomUUID().toString();
         this.date = System.currentTimeMillis();
         this.currency = "INR";
         this.isSynced = false;
+        this.updatedAt = System.currentTimeMillis();
+        this.deleted = false;
     }
 
     public Expense(String id, String userId, double amount, String category,
@@ -43,7 +49,7 @@ public class Expense {
                    String location, String tags, long date) {
         this.id = id;
         this.userId = userId;
-        this.amount = amount;
+        this.amount = MoneyUtils.normalize(amount);
         this.category = category;
         this.title = title;
         this.notes = notes;
@@ -53,6 +59,8 @@ public class Expense {
         this.date = date;
         this.currency = "INR";
         this.isSynced = false;
+        this.updatedAt = System.currentTimeMillis();
+        this.deleted = false;
     }
 
     // Getters and Setters
@@ -64,7 +72,7 @@ public class Expense {
     public void setUserId(String userId) { this.userId = userId; }
 
     public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public void setAmount(double amount) { this.amount = MoneyUtils.normalize(amount); }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
@@ -101,6 +109,12 @@ public class Expense {
 
     public String getOriginalCurrency() { return originalCurrency; }
     public void setOriginalCurrency(String originalCurrency) { this.originalCurrency = originalCurrency; }
+
+    public long getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
+
+    public boolean isDeleted() { return deleted; }
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
     // Category constants
     public static final String CATEGORY_FOOD = "Food";

@@ -30,6 +30,6 @@ public interface BudgetDao {
     @Query("SELECT * FROM budgets WHERE isSynced = 0 AND userId = :userId")
     java.util.List<Budget> getUnsyncedBudgets(String userId);
 
-    @Query("UPDATE budgets SET isSynced = 1 WHERE id = :id")
-    void markAsSynced(String id);
+    @Query("UPDATE budgets SET isSynced = 1 WHERE id = :id AND userId = :userId AND updatedAt = :updatedAt")
+    void markAsSynced(String id, String userId, long updatedAt);
 }

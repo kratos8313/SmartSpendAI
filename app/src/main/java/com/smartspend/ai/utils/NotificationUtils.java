@@ -3,10 +3,15 @@ package com.smartspend.ai.utils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.smartspend.ai.R;
 import com.smartspend.ai.SmartSpendApp;
@@ -17,6 +22,7 @@ public class NotificationUtils {
     private static int notificationId = 1000;
 
     public static void showBudgetAlert(Context context, String message) {
+        if (!canNotify(context)) return;
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -37,7 +43,20 @@ public class NotificationUtils {
         if (manager != null) manager.notify(notificationId++, builder.build());
     }
 
+    public static void showBudgetAlertOnce(Context context, String key, String message) {
+        android.content.SharedPreferences preferences = context.getSharedPreferences("notification_state", Context.MODE_PRIVATE);
+        if (preferences.getBoolean(key, false)) return;
+        showBudgetAlert(context, message);
+        if (canNotify(context)) preferences.edit().putBoolean(key, true).apply();
+    }
+
+    private static boolean canNotify(Context context) {
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return false;
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+    }
     public static void showDailyReminder(Context context) {
+        if (!canNotify(context)) return;
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("navigate_to", "add_expense");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -59,6 +78,7 @@ public class NotificationUtils {
     }
 
     public static void showMonthlyReport(Context context, double total, double budget) {
+        if (!canNotify(context)) return;
         String message;
         if (budget > 0) {
             double percentage = (total / budget) * 100;

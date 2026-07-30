@@ -3,6 +3,7 @@ package com.smartspend.ai.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -101,6 +102,11 @@ public class AuthActivity extends AppCompatActivity {
             return;
         }
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError("Enter a valid email address");
+            return;
+        }
+
         showLoading(true);
         auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(result -> {
@@ -123,6 +129,11 @@ public class AuthActivity extends AppCompatActivity {
             return;
         }
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError("Enter a valid email address");
+            return;
+        }
+
         if (password.length() < 6) {
             showError("Password must be at least 6 characters");
             return;
@@ -137,17 +148,18 @@ public class AuthActivity extends AppCompatActivity {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(name)
                                 .build();
-                        firebaseUser.updateProfile(profileUpdates);
-
-                        // Save user to Firestore
                         User user = new User(firebaseUser.getUid(), name, email);
-                        firestore.collection("users")
-                                .document(firebaseUser.getUid())
-                                .set(user)
-                                .addOnCompleteListener(task -> {
-                                    showLoading(false);
-                                    navigateToMain();
-                                });
+                        com.google.android.gms.tasks.Tasks.whenAll(
+                                firebaseUser.updateProfile(profileUpdates),
+                                firestore.collection("users").document(firebaseUser.getUid()).set(user)
+                        ).addOnSuccessListener(ignored -> {
+                            showLoading(false);
+                            navigateToMain();
+                        }).addOnFailureListener(error -> {
+                            auth.signOut();
+                            showLoading(false);
+                            showError("Account created, but profile setup failed. Please sign in again.");
+                        });
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -160,6 +172,10 @@ public class AuthActivity extends AppCompatActivity {
         String email = getEmail();
         if (email.isEmpty()) {
             showError("Please enter your email");
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showError("Enter a valid email address");
             return;
         }
 

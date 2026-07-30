@@ -95,11 +95,22 @@ public class ReceiptScannerActivity extends AppCompatActivity {
 
     private void processImageFromUri(Uri uri) {
         try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            if (inputStream == null) return;
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-
+            BitmapFactory.Options bounds = new BitmapFactory.Options();
+            bounds.inJustDecodeBounds = true;
+            try (InputStream stream = getContentResolver().openInputStream(uri)) {
+                if (stream == null) return;
+                BitmapFactory.decodeStream(stream, null, bounds);
+            }
+            int sampleSize = 1;
+            while (bounds.outWidth / sampleSize > 2048 || bounds.outHeight / sampleSize > 2048) sampleSize *= 2;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = sampleSize;
+            Bitmap bitmap;
+            try (InputStream stream = getContentResolver().openInputStream(uri)) {
+                if (stream == null) return;
+                bitmap = BitmapFactory.decodeStream(stream, null, options);
+            }
+            if (bitmap == null) throw new IllegalArgumentException("Unsupported image");
             showReceiptPreview(bitmap);
             scanReceiptWithOcr(bitmap);
         } catch (Exception e) {
@@ -163,6 +174,7 @@ public class ReceiptScannerActivity extends AppCompatActivity {
         intent.putExtra("amount", lastReceipt.amount);
         intent.putExtra("merchant", lastReceipt.merchantName);
         intent.putExtra("category", lastReceipt.suggestedCategory);
+        if (lastReceipt.dateMillis > 0) intent.putExtra("date", lastReceipt.dateMillis);
         startActivity(intent);
         finish();
     }

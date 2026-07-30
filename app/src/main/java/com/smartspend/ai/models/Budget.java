@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
+import com.smartspend.ai.utils.MoneyUtils;
+
 @Entity(tableName = "budgets")
 public class Budget {
 
@@ -24,12 +26,14 @@ public class Budget {
     private boolean alertAt80;
     private boolean alertAt100;
     private boolean isSynced;
+    private long updatedAt;
 
     public Budget() {
         this.id = java.util.UUID.randomUUID().toString();
         this.alertAt80 = true;
         this.alertAt100 = true;
         this.isSynced = false;
+        this.updatedAt = System.currentTimeMillis();
     }
 
     @NonNull
@@ -40,25 +44,25 @@ public class Budget {
     public void setUserId(String userId) { this.userId = userId; }
 
     public double getTotalBudget() { return totalBudget; }
-    public void setTotalBudget(double totalBudget) { this.totalBudget = totalBudget; }
+    public void setTotalBudget(double totalBudget) { this.totalBudget = MoneyUtils.nonNegative(totalBudget); }
 
     public double getFoodBudget() { return foodBudget; }
-    public void setFoodBudget(double foodBudget) { this.foodBudget = foodBudget; }
+    public void setFoodBudget(double foodBudget) { this.foodBudget = MoneyUtils.nonNegative(foodBudget); }
 
     public double getTravelBudget() { return travelBudget; }
-    public void setTravelBudget(double travelBudget) { this.travelBudget = travelBudget; }
+    public void setTravelBudget(double travelBudget) { this.travelBudget = MoneyUtils.nonNegative(travelBudget); }
 
     public double getShoppingBudget() { return shoppingBudget; }
-    public void setShoppingBudget(double shoppingBudget) { this.shoppingBudget = shoppingBudget; }
+    public void setShoppingBudget(double shoppingBudget) { this.shoppingBudget = MoneyUtils.nonNegative(shoppingBudget); }
 
     public double getBillsBudget() { return billsBudget; }
-    public void setBillsBudget(double billsBudget) { this.billsBudget = billsBudget; }
+    public void setBillsBudget(double billsBudget) { this.billsBudget = MoneyUtils.nonNegative(billsBudget); }
 
     public double getEntertainmentBudget() { return entertainmentBudget; }
-    public void setEntertainmentBudget(double entertainmentBudget) { this.entertainmentBudget = entertainmentBudget; }
+    public void setEntertainmentBudget(double entertainmentBudget) { this.entertainmentBudget = MoneyUtils.nonNegative(entertainmentBudget); }
 
     public double getHealthcareBudget() { return healthcareBudget; }
-    public void setHealthcareBudget(double healthcareBudget) { this.healthcareBudget = healthcareBudget; }
+    public void setHealthcareBudget(double healthcareBudget) { this.healthcareBudget = MoneyUtils.nonNegative(healthcareBudget); }
 
     public int getMonth() { return month; }
     public void setMonth(int month) { this.month = month; }
@@ -74,6 +78,9 @@ public class Budget {
 
     public boolean isSynced() { return isSynced; }
     public void setSynced(boolean synced) { isSynced = synced; }
+
+    public long getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
 
     public double getBudgetForCategory(String category) {
         switch (category) {

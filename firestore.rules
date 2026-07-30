@@ -1,22 +1,87 @@
-// Firebase Firestore Security Rules for SmartSpend AI
-// Deploy these rules in Firebase Console -> Firestore -> Rules
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
 
-    // Users can only read/write their own data
+    function validText(value, maxLength) {
+      return value == null || (value is string && value.size() <= maxLength);
+    }
+
+    function validMoney(value, allowZero) {
+      return value is number
+        && value < 1000000000
+        && (allowZero ? value >= 0 : value > 0);
+    }
+
+    function validUser(userId) {
+      let data = request.resource.data;
+      return data.keys().hasAll(['uid', 'name', 'email', 'currency', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'name', 'email', 'photoUrl', 'currency',
+          'biometricEnabled', 'darkModeEnabled', 'notificationsEnabled', 'createdAt'])
+        && data.uid == userId
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 120
+        && data.email is string && data.email.size() > 3 && data.email.size() <= 320
+        && data.currency is string && data.currency.size() == 3
+        && data.createdAt is int
+        && validText(data.photoUrl, 1000);
+    }
+
+    function validExpense(userId) {
+      let data = request.resource.data;
+      return data.keys().hasAll(['id', 'userId', 'amount', 'category', 'title', 'notes',
+          'paymentMode', 'location', 'tags', 'date', 'receiptImagePath', 'synced',
+          'currency', 'originalAmount', 'originalCurrency', 'updatedAt', 'deleted'])
+        && data.keys().hasOnly(['id', 'userId', 'amount', 'category', 'title', 'notes',
+          'paymentMode', 'location', 'tags', 'date', 'receiptImagePath', 'synced',
+          'currency', 'originalAmount', 'originalCurrency', 'updatedAt', 'deleted'])
+        && data.userId == userId
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 128
+        && validMoney(data.amount, false) && validMoney(data.originalAmount, true)
+        && data.date is int && data.updatedAt is int
+        && data.deleted is bool && data.synced is bool
+        && validText(data.category, 40) && validText(data.title, 200)
+        && validText(data.notes, 2000) && validText(data.tags, 500)
+        && validText(data.location, 500) && validText(data.paymentMode, 40)
+        && validText(data.receiptImagePath, 1000)
+        && validText(data.currency, 3) && validText(data.originalCurrency, 3);
+    }
+
+    function validBudget(userId) {
+      let data = request.resource.data;
+      return data.keys().hasAll(['id', 'userId', 'totalBudget', 'foodBudget', 'travelBudget',
+          'shoppingBudget', 'billsBudget', 'entertainmentBudget', 'healthcareBudget',
+          'month', 'year', 'alertAt80', 'alertAt100', 'synced', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'userId', 'totalBudget', 'foodBudget', 'travelBudget',
+          'shoppingBudget', 'billsBudget', 'entertainmentBudget', 'healthcareBudget',
+          'month', 'year', 'alertAt80', 'alertAt100', 'synced', 'updatedAt'])
+        && data.userId == userId
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 128
+        && validMoney(data.totalBudget, false)
+        && validMoney(data.foodBudget, true) && validMoney(data.travelBudget, true)
+        && validMoney(data.shoppingBudget, true) && validMoney(data.billsBudget, true)
+        && validMoney(data.entertainmentBudget, true) && validMoney(data.healthcareBudget, true)
+        && data.month is int && data.month >= 1 && data.month <= 12
+        && data.year is int && data.year >= 2020 && data.year <= 2200
+        && data.alertAt80 is bool && data.alertAt100 is bool && data.synced is bool
+        && data.updatedAt is int;
+    }
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, delete: if signedInAs(userId);
+      allow create, update: if signedInAs(userId) && validUser(userId);
 
-      // Expenses sub-collection
       match /expenses/{expenseId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, delete: if signedInAs(userId);
+        allow create, update: if signedInAs(userId)
+          && request.resource.data.id == expenseId
+          && validExpense(userId);
       }
 
-      // Budgets sub-collection
       match /budgets/{budgetId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, delete: if signedInAs(userId);
+        allow create, update: if signedInAs(userId) && validBudget(userId);
       }
     }
   }
