@@ -25,6 +25,7 @@ import com.smartspend.ai.databinding.ActivityAddExpenseBinding;
 import com.smartspend.ai.models.Expense;
 import com.smartspend.ai.utils.CategoryUtils;
 import com.smartspend.ai.utils.DateUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 import com.smartspend.ai.utils.MoneyUtils;
 import com.smartspend.ai.viewmodels.ExpenseViewModel;
 
@@ -41,6 +42,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     private String selectedCategory = Expense.CATEGORY_FOOD;
     private String editExpenseId = null;
     private Expense existingExpense;
+    private String selectedCurrency;
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {});
@@ -63,6 +65,9 @@ public class AddExpenseActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
+        selectedCurrency = getIntent().getStringExtra("currency");
+        if (selectedCurrency == null || selectedCurrency.isBlank()) selectedCurrency = CurrencyUtils.getAccountCurrency();
+        updateAmountHint();
 
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
@@ -103,6 +108,10 @@ public class AddExpenseActivity extends AppCompatActivity {
                 setSelectedCategory(scannedCategory);
             }
         }
+    }
+
+    private void updateAmountHint() {
+        binding.tilAmount.setHint("Amount (" + CurrencyUtils.getSymbol(selectedCurrency) + ")");
     }
 
     private void setupCategoryChips() {
@@ -206,6 +215,7 @@ public class AddExpenseActivity extends AppCompatActivity {
                 existingExpense : new Expense();
 
         expense.setAmount(amount);
+        expense.setCurrency(selectedCurrency);
         expense.setTitle(title);
         expense.setCategory(selectedCategory);
         expense.setDate(selectedDate);
@@ -270,6 +280,8 @@ public class AddExpenseActivity extends AppCompatActivity {
         viewModel.getExpenseById(editExpenseId).observe(this, expense -> {
             if (expense != null) {
                 existingExpense = expense;
+                selectedCurrency = expense.getCurrency() == null ? CurrencyUtils.getAccountCurrency() : expense.getCurrency();
+                updateAmountHint();
                 binding.etAmount.setText(String.format(Locale.getDefault(), "%.2f", expense.getAmount()));
                 binding.etTitle.setText(expense.getTitle());
                 binding.etNotes.setText(expense.getNotes());

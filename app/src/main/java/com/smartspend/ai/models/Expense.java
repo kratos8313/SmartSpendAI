@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
 import com.smartspend.ai.utils.MoneyUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
@@ -38,7 +39,7 @@ public class Expense {
     public Expense() {
         this.id = java.util.UUID.randomUUID().toString();
         this.date = System.currentTimeMillis();
-        this.currency = "INR";
+        this.currency = CurrencyUtils.getAccountCurrency();
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
@@ -57,7 +58,7 @@ public class Expense {
         this.location = location;
         this.tags = tags;
         this.date = date;
-        this.currency = "INR";
+        this.currency = CurrencyUtils.getAccountCurrency();
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
@@ -102,7 +103,7 @@ public class Expense {
     public void setSynced(boolean synced) { isSynced = synced; }
 
     public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
+    public void setCurrency(String currency) { this.currency = currency == null || currency.isBlank() ? CurrencyUtils.getAccountCurrency() : currency; }
 
     public double getOriginalAmount() { return originalAmount; }
     public void setOriginalAmount(double originalAmount) { this.originalAmount = originalAmount; }

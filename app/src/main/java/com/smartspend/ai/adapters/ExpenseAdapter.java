@@ -73,7 +73,7 @@ public class ExpenseAdapter extends ListAdapter<Expense, ExpenseAdapter.ExpenseV
 
         void bind(Expense expense) {
             binding.tvExpenseTitle.setText(expense.getTitle());
-            binding.tvExpenseAmount.setText(CurrencyUtils.formatAmount(expense.getAmount()));
+            binding.tvExpenseAmount.setText(CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency()));
             binding.tvExpenseDate.setText(DateUtils.getRelativeDate(expense.getDate()));
             binding.tvExpenseCategory.setText(expense.getCategory());
             binding.tvPaymentMode.setText(expense.getPaymentMode());

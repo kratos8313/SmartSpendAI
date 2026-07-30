@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="?attr/android:colorBackground">
+    <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="?attr/colorSurface" app:elevation="0dp">
+        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:title="Monthly Report" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+            <TextView android:id="@+id/tv_report_period" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="14sp" android:textColor="@color/textSecondary" android:fontFamily="@font/poppins_medium" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total spending"
+                android:layout_marginTop="12dp" android:textColor="@color/textSecondary" />
+            <TextView android:id="@+id/tv_report_total" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textSize="34sp" android:fontFamily="@font/poppins_bold"
+                android:textColor="?attr/colorOnSurface" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginTop="12dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginEnd="5dp" app:cardCornerRadius="14dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp" android:orientation="vertical">
+                        <TextView android:text="Budget" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/textSecondary" />
+                        <TextView android:id="@+id/tv_report_budget" android:layout_width="match_parent" android:layout_height="wrap_content" android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginStart="5dp" app:cardCornerRadius="14dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp" android:orientation="vertical">
+                        <TextView android:text="Trend" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/textSecondary" />
+                        <TextView android:id="@+id/tv_report_change" android:layout_width="match_parent" android:layout_height="wrap_content" android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+            <TextView android:id="@+id/tv_report_count" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:fontFamily="@font/poppins_medium" />
+            <TextView android:text="Top category" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:textColor="@color/textSecondary" />
+            <TextView android:id="@+id/tv_top_category" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textSize="18sp" android:fontFamily="@font/poppins_semibold" />
+            <TextView android:text="Category breakdown" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" android:textColor="@color/textSecondary" />
+            <TextView android:id="@+id/tv_category_breakdown" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" android:lineSpacingExtra="5dp" />
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="22dp" app:cardCornerRadius="16dp" app:strokeWidth="1dp" app:strokeColor="@color/colorPrimary">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                    <TextView android:text="Smart summary" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="18sp" android:fontFamily="@font/poppins_semibold" />
+                    <TextView android:id="@+id/tv_ai_summary" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:lineSpacingExtra="4dp" />
+                    <TextView android:id="@+id/tv_ai_source" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:textSize="12sp" android:textColor="@color/textSecondary" />
+                    <ProgressBar android:id="@+id/progress_ai" android:layout_width="28dp" android:layout_height="28dp"
+                        android:layout_gravity="center_horizontal" android:visibility="gone" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_generate_ai"
+                        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+                        android:text="Generate Gemini summary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.button.MaterialButton android:id="@+id/btn_export_report"
+                style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height" android:layout_marginTop="16dp"
+                android:layout_marginBottom="28dp" android:text="Export report as PDF" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

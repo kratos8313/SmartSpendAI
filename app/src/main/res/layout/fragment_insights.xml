@@ -55,7 +55,7 @@
                     android:id="@+id/tv_current_spend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹0"
+                    android:text="0"
                     android:textSize="16sp"
                     android:fontFamily="@font/poppins_bold"
                     android:textColor="#FFFFFF" />
@@ -82,7 +82,7 @@
                     android:id="@+id/tv_last_month_spend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹0"
+                    android:text="0"
                     android:textSize="16sp"
                     android:fontFamily="@font/poppins_bold"
                     android:textColor="#FFFFFF" />
@@ -169,7 +169,7 @@
                     android:id="@+id/tv_avg_expense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹0"
+                    android:text="0"
                     android:textSize="16sp"
                     android:fontFamily="@font/poppins_bold"
                     android:textColor="#FFFFFF" />

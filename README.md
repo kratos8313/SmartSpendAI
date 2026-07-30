@@ -6,10 +6,10 @@ SmartSpend AI is an Android personal-finance app built with Java, Room, Firebase
 
 - Email/password authentication, password reset, and optional biometric app lock
 - Offline-first expense and budget storage with conflict-aware Firestore synchronization
-- Receipt scanning with sampled image decoding and merchant, amount, and date extraction
-- Rule-based spending insights using like-for-like month-to-date comparisons
+- Receipt scanning with EXIF rotation, quality warnings, confidence reporting, currency detection, and scored total extraction
+- Deterministic spending insights plus an optional Gemini monthly narrative grounded only in calculated aggregates
 - Budget threshold alerts, daily reminders, and deduplicated monthly summaries
-- Analytics, search, category filters, voice-assisted entry, dark mode, and PDF export
+- Analytics, a functional monthly report, configurable account currency, search, voice-assisted entry, dark mode, and PDF export
 - Room database migration support, restrictive Firestore rules, unit tests, lint, and CI
 
 ## Requirements
@@ -28,6 +28,26 @@ SmartSpend AI is an Android personal-finance app built with Java, Room, Firebase
 
 The project can compile without google-services.json for CI and static verification, but Firebase features require it at runtime.
 
+## Firebase AI setup
+
+The monthly report always works offline using deterministic calculations. To enable the optional Gemini summary:
+
+1. Add `app/google-services.json` from the Firebase project.
+2. Enable Firebase AI Logic with the Google AI backend in the Firebase console.
+3. Enable Firebase App Check. Debug builds use the App Check debug provider; register the printed debug token. Release builds use Play Integrity, so register the release SHA-256 certificate.
+4. Set Firebase AI Logic and App Check usage alerts/quotas before production rollout.
+
+Only monthly totals, budget, count, currency code, and category totals are sent to the model. Transaction titles, merchant names, notes, dates, and receipt images remain local to this feature. Model failure falls back to the local summary.
+
+## Currency behavior
+
+Settings offers INR, USD, EUR, GBP, JPY, CAD, AUD, SGD, and AED. The choice controls budgets, dashboard totals, reports, and new expenses. Existing expenses retain their stored currency and are not silently exchange-rate converted. A future multi-currency conversion feature should store the rate, rate timestamp, source, and original amount before combining currencies.
+
+## OCR quality validation
+
+OCR is assistive, not authoritative: users must review detected values before saving. The scanner corrects EXIF rotation, warns for low-resolution images, scores likely total lines while penalizing subtotal/tax/change lines, detects common currency markers, and exposes a field-completeness confidence score.
+
+Before each release, test at least 100 consented or synthetic receipts across currencies, merchants, lighting, crumpling, camera angles, and printed/digital formats. Track exact-match accuracy separately for amount, date, merchant, and currency, with a launch target of at least 95% amount accuracy and no silent save path. Do not include personal receipt data in the repository.
 ## Release checklist
 
 Before publishing to an app store:

@@ -76,7 +76,7 @@
                 android:id="@+id/tv_monthly_spending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="₹0.00"
+                android:text="0.00"
                 android:textColor="#FFFFFF"
                 android:textSize="38sp"
                 android:fontFamily="@font/poppins_bold" />
@@ -108,7 +108,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Budget: ₹0"
+                            android:text="Budget: 0"
                             android:textColor="#FFFFFF"
                             android:textSize="13sp"
                             android:fontFamily="@font/poppins_medium" />
@@ -184,6 +184,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_monthly_report"
                 android:layout_width="0dp"
                 android:layout_height="72dp"
                 android:layout_weight="1"

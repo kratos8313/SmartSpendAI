@@ -29,7 +29,7 @@
     <!-- Expense -->
     <string name="add_expense">Add Expense</string>
     <string name="edit_expense">Edit Expense</string>
-    <string name="amount_hint">Amount (₹)</string>
+    <string name="amount_hint">Amount</string>
     <string name="title_hint">Title / Description</string>
     <string name="notes_hint">Notes (optional)</string>
     <string name="location_hint">Location (optional)</string>

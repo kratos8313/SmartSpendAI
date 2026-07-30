@@ -18,3 +18,4 @@
 *.hprof
 .gradle-*/
 .android-home/
+.android-local/

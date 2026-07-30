@@ -1,0 +1,114 @@
+package com.smartspend.ai.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import com.smartspend.ai.databinding.ActivityMonthlyReportBinding;
+import com.smartspend.ai.models.Expense;
+import com.smartspend.ai.utils.CurrencyUtils;
+import com.smartspend.ai.utils.DateUtils;
+import com.smartspend.ai.utils.GenAiService;
+import com.smartspend.ai.utils.MonthlyReportSummary;
+import com.smartspend.ai.utils.PdfExporter;
+import com.smartspend.ai.viewmodels.BudgetViewModel;
+import com.smartspend.ai.viewmodels.ExpenseViewModel;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+public class MonthlyReportActivity extends AppCompatActivity {
+    private ActivityMonthlyReportBinding binding;
+    private List<Expense> current = new ArrayList<>();
+    private List<Expense> previous = new ArrayList<>();
+    private double budget;
+    private MonthlyReportSummary summary;
+    private String narrative;
+    private boolean aiGenerated;
+
+    @Override protected void onCreate(Bundle state) {
+        super.onCreate(state);
+        binding = ActivityMonthlyReportBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Monthly Report");
+        }
+        binding.tvReportPeriod.setText(DateUtils.MONTH_YEAR_FORMAT.format(new Date()));
+        ExpenseViewModel expenses = new ViewModelProvider(this).get(ExpenseViewModel.class);
+        BudgetViewModel budgets = new ViewModelProvider(this).get(BudgetViewModel.class);
+        expenses.getThisMonthExpenses().observe(this, value -> { current = value == null ? new ArrayList<>() : value; render(); });
+        expenses.getLastMonthExpenses().observe(this, value -> { previous = value == null ? new ArrayList<>() : value; render(); });
+        budgets.getCurrentMonthBudget().observe(this, value -> { budget = value == null ? 0 : value.getTotalBudget(); render(); });
+        binding.btnGenerateAi.setOnClickListener(v -> generateNarrative());
+        binding.btnExportReport.setOnClickListener(v -> exportReport());
+        render();
+    }
+
+    private void render() {
+        summary = MonthlyReportSummary.from(current, previous, budget, CurrencyUtils.getAccountCurrency());
+        binding.tvReportTotal.setText(CurrencyUtils.formatAmount(summary.total));
+        binding.tvReportCount.setText(summary.expenseCount + (summary.expenseCount == 1 ? " expense" : " expenses"));
+        binding.tvReportBudget.setText(summary.budget > 0
+                ? String.format(java.util.Locale.getDefault(), "%.0f%% used · %s budget", summary.budgetPercent,
+                    CurrencyUtils.formatAmount(summary.budget))
+                : "No budget set");
+        binding.tvReportChange.setText(summary.previousTotal > 0
+                ? String.format(java.util.Locale.getDefault(), "%+.0f%% vs last month", summary.changePercent)
+                : "No prior-month baseline");
+        binding.tvTopCategory.setText(summary.topCategoryTotal > 0
+                ? summary.topCategory + " · " + CurrencyUtils.formatAmount(summary.topCategoryTotal)
+                : summary.topCategory);
+        StringBuilder breakdown = new StringBuilder();
+        for (Map.Entry<String, Double> entry : summary.categoryTotals.entrySet()) {
+            if (breakdown.length() > 0) breakdown.append("\n");
+            breakdown.append(entry.getKey()).append("  ").append(CurrencyUtils.formatAmount(entry.getValue()));
+        }
+        binding.tvCategoryBreakdown.setText(breakdown.length() == 0 ? "No category data yet" : breakdown.toString());
+        if (!aiGenerated) {
+            narrative = summary.deterministicNarrative();
+            binding.tvAiSummary.setText(narrative);
+            binding.tvAiSource.setText("Calculated locally from your monthly totals");
+        }
+    }
+
+    private void generateNarrative() {
+        if (summary == null || summary.expenseCount == 0) {
+            Toast.makeText(this, "Add an expense before generating a summary", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.progressAi.setVisibility(View.VISIBLE);
+        binding.btnGenerateAi.setEnabled(false);
+        binding.tvAiSource.setText("Generating a privacy-conscious summary...");
+        GenAiService.generateMonthlyNarrative(this, summary, (text, generated) -> {
+            narrative = text;
+            aiGenerated = generated;
+            binding.tvAiSummary.setText(text);
+            binding.tvAiSource.setText(generated
+                    ? "Generated by Gemini from calculated totals only"
+                    : "AI unavailable · showing the local calculated summary");
+            binding.progressAi.setVisibility(View.GONE);
+            binding.btnGenerateAi.setEnabled(true);
+        });
+    }
+
+    private void exportReport() {
+        try {
+            Intent share = PdfExporter.exportMonthlyReport(this, current, summary, narrative);
+            startActivity(Intent.createChooser(share, "Share monthly report"));
+        } catch (Exception error) {
+            Toast.makeText(this, "Could not export report", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) { onBackPressed(); return true; }
+        return super.onOptionsItemSelected(item);
+    }
+}

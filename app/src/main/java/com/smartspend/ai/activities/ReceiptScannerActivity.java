@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,10 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.smartspend.ai.R;
 import com.smartspend.ai.databinding.ActivityReceiptScannerBinding;
 import com.smartspend.ai.utils.OcrUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -118,6 +121,18 @@ public class ReceiptScannerActivity extends AppCompatActivity {
         }
     }
 
+    private Bitmap applyExifRotation(Uri uri, Bitmap bitmap) {
+        try (InputStream stream = getContentResolver().openInputStream(uri)) {
+            if (stream == null) return bitmap;
+            int orientation = new ExifInterface(stream).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            float degrees = orientation == ExifInterface.ORIENTATION_ROTATE_90 ? 90
+                    : orientation == ExifInterface.ORIENTATION_ROTATE_180 ? 180
+                    : orientation == ExifInterface.ORIENTATION_ROTATE_270 ? 270 : 0;
+            if (degrees == 0) return bitmap;
+            Matrix matrix = new Matrix(); matrix.postRotate(degrees);
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (Exception ignored) { return bitmap; }
+    }
     private void showReceiptPreview(Bitmap bitmap) {
         binding.ivReceipt.setImageBitmap(bitmap);
         binding.ivReceipt.setVisibility(View.VISIBLE);
@@ -153,12 +168,15 @@ public class ReceiptScannerActivity extends AppCompatActivity {
     private void displayScanResult(OcrUtils.ScannedReceipt receipt) {
         lastReceipt = receipt;
         binding.progressScanning.setVisibility(View.GONE);
-        binding.tvScanStatus.setVisibility(View.GONE);
+        binding.tvScanStatus.setVisibility(View.VISIBLE);
         binding.cardScanResult.setVisibility(View.VISIBLE);
 
+        String status = "Review detected fields · " + receipt.confidencePercent + "% field confidence";
+        if (receipt.qualityWarning != null && !receipt.qualityWarning.isEmpty()) status += "\n" + receipt.qualityWarning;
+        binding.tvScanStatus.setText(status);
         binding.tvMerchantName.setText(receipt.merchantName != null ? receipt.merchantName : "Unknown");
         binding.tvScannedAmount.setText(receipt.amount > 0 ?
-                String.format(Locale.getDefault(), "₹%.2f", receipt.amount) : "Not detected");
+                CurrencyUtils.formatAmount(receipt.amount, receipt.currencyCode) : "Not detected");
         binding.tvScannedDate.setText(receipt.date != null && !receipt.date.isEmpty() ?
                 receipt.date : "Not detected");
         binding.tvScannedCategory.setText(receipt.suggestedCategory != null ?
@@ -174,6 +192,7 @@ public class ReceiptScannerActivity extends AppCompatActivity {
         intent.putExtra("amount", lastReceipt.amount);
         intent.putExtra("merchant", lastReceipt.merchantName);
         intent.putExtra("category", lastReceipt.suggestedCategory);
+        intent.putExtra("currency", lastReceipt.currencyCode);
         if (lastReceipt.dateMillis > 0) intent.putExtra("date", lastReceipt.dateMillis);
         startActivity(intent);
         finish();

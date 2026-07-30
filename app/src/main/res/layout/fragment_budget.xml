@@ -56,7 +56,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Spent: ₹0"
+                        android:text="Spent: 0"
                         android:textSize="15sp"
                         android:fontFamily="@font/poppins_semibold"
                         android:textColor="@color/expense_red" />
@@ -65,7 +65,7 @@
                         android:id="@+id/tv_remaining_budget"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remaining: ₹0"
+                        android:text="Remaining: 0"
                         android:textSize="15sp"
                         android:fontFamily="@font/poppins_semibold"
                         android:textColor="@color/expense_green" />
@@ -114,7 +114,7 @@
                     style="@style/SmartSpend.TextInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Total Monthly Budget (₹)"
+                    android:hint="Total Monthly Budget"
                     app:startIconDrawable="@drawable/ic_budget">
 
                     <com.google.android.material.textfield.TextInputEditText
