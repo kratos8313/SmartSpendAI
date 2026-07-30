@@ -1,8 +1,6 @@
 package com.smartspend.ai.utils;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -15,8 +13,6 @@ import java.util.regex.Pattern;
 
 public class OcrUtils {
 
-    private static final String TAG = "OcrUtils";
-
     public interface OcrCallback {
         void onSuccess(ScannedReceipt receipt);
         void onFailure(Exception e);
@@ -26,7 +22,8 @@ public class OcrUtils {
         public String merchantName;
         public double amount;
         public String date;
-        public String rawText;
+        public long dateMillis;
+
         public String suggestedCategory;
     }
 
@@ -39,15 +36,14 @@ public class OcrUtils {
                     ScannedReceipt receipt = parseReceiptText(visionText);
                     callback.onSuccess(receipt);
                 })
-                .addOnFailureListener(callback::onFailure);
+                .addOnFailureListener(callback::onFailure)
+                .addOnCompleteListener(ignored -> recognizer.close());
     }
 
     private static ScannedReceipt parseReceiptText(Text visionText) {
         ScannedReceipt receipt = new ScannedReceipt();
         String fullText = visionText.getText();
-        receipt.rawText = fullText;
 
-        Log.d(TAG, "OCR Text: " + fullText);
 
         // Extract amount - look for total amount patterns
         receipt.amount = extractAmount(fullText);
@@ -57,6 +53,7 @@ public class OcrUtils {
 
         // Extract date
         receipt.date = extractDate(fullText);
+        receipt.dateMillis = parseDateMillis(receipt.date);
 
         // Auto-categorize
         receipt.suggestedCategory = AiEngine.autoCategorizeMerchant(receipt.merchantName);
@@ -64,7 +61,7 @@ public class OcrUtils {
         return receipt;
     }
 
-    private static double extractAmount(String text) {
+    static double extractAmount(String text) {
         // Pattern: Total, Grand Total, Amount, TOTAL
         String[] totalKeywords = {"grand total", "total amount", "total", "amount", "net amount", "payable"};
         String lowerText = text.toLowerCase();
@@ -119,7 +116,7 @@ public class OcrUtils {
         return "Unknown Merchant";
     }
 
-    private static String extractDate(String text) {
+    static String extractDate(String text) {
         // Patterns: DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
         Pattern[] datePatterns = {
                 Pattern.compile("(\\d{1,2})[/\\-\\.](\\d{1,2})[/\\-\\.](\\d{2,4})"),
@@ -135,6 +132,19 @@ public class OcrUtils {
         return "";
     }
 
+    static long parseDateMillis(String value) {
+        if (value == null || value.isEmpty()) return 0;
+        String[] formats = {"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d/M/yy", "d-M-yy", "d MMM yyyy", "d MMM yy"};
+        for (String format : formats) {
+            try {
+                java.text.SimpleDateFormat parser = new java.text.SimpleDateFormat(format, java.util.Locale.ENGLISH);
+                parser.setLenient(false);
+                java.util.Date date = parser.parse(value);
+                if (date != null) return date.getTime();
+            } catch (java.text.ParseException ignored) { }
+        }
+        return 0;
+    }
     private static String capitalizeWords(String text) {
         String[] words = text.toLowerCase().split("\\s+");
         StringBuilder sb = new StringBuilder();

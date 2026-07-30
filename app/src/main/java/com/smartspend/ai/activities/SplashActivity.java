@@ -12,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.smartspend.ai.R;
+import com.smartspend.ai.utils.SecurityUtils;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -63,13 +67,33 @@ public class SplashActivity extends AppCompatActivity {
 
     private void navigateNext() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Intent intent;
-        if (user != null) {
-            intent = new Intent(this, MainActivity.class);
+        if (user != null && SecurityUtils.isBiometricEnabled(this)) {
+            authenticateBeforeOpening();
         } else {
-            intent = new Intent(this, AuthActivity.class);
+            open(user != null ? MainActivity.class : AuthActivity.class);
         }
-        startActivity(intent);
+    }
+    private void authenticateBeforeOpening() {
+        BiometricPrompt prompt = new BiometricPrompt(this, ContextCompat.getMainExecutor(this),
+                new BiometricPrompt.AuthenticationCallback() {
+                    @Override public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                        open(MainActivity.class);
+                    }
+                    @Override public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                        FirebaseAuth.getInstance().signOut();
+                        open(AuthActivity.class);
+                    }
+                });
+        BiometricPrompt.PromptInfo info = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Unlock SmartSpend AI")
+                .setSubtitle("Authenticate to access your financial data")
+                .setNegativeButtonText("Use account password")
+                .build();
+        prompt.authenticate(info);
+    }
+
+    private void open(Class<?> destination) {
+        startActivity(new Intent(this, destination));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
     }

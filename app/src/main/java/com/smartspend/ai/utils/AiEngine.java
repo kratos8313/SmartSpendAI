@@ -25,11 +25,12 @@ public class AiEngine {
         if (currentMonthExpenses == null) currentMonthExpenses = new ArrayList<>();
         if (lastMonthExpenses == null) lastMonthExpenses = new ArrayList<>();
 
+        List<Expense> comparableLastMonth = filterThroughDay(lastMonthExpenses, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         double currentTotal = sumExpenses(currentMonthExpenses);
-        double lastTotal = sumExpenses(lastMonthExpenses);
+        double lastTotal = sumExpenses(comparableLastMonth);
 
         Map<String, Double> currentByCategory = groupByCategory(currentMonthExpenses);
-        Map<String, Double> lastByCategory = groupByCategory(lastMonthExpenses);
+        Map<String, Double> lastByCategory = groupByCategory(comparableLastMonth);
 
         // 1. Overall spending change
         if (lastTotal > 0) {
@@ -66,26 +67,26 @@ public class AiEngine {
             double last = lastByCategory.getOrDefault(cat, 0.0);
             if (last > 0 && current > 0) {
                 double change = ((current - last) / last) * 100;
-                if (change > 35) {
+                if (change > 50) {
                     AiInsight insight = new AiInsight(
                             AiInsight.TYPE_OVERSPENDING,
-                            cat + " Overspending",
+                            cat + " Spending Spike",
                             String.format(Locale.getDefault(),
-                                    "You spent %.0f%% more on %s this month. Consider setting a category budget.", change, cat.toLowerCase()),
+                                    "%s spending rose by %.0f%% versus the same period last month.", cat, change),
                             getCategoryIcon(cat),
-                            1
+                            2
                     );
                     insight.setCategory(cat);
                     insight.setPercentageChange(change);
                     insights.add(insight);
-                } else if (change > 50) {
+                } else if (change > 35) {
                     AiInsight insight = new AiInsight(
                             AiInsight.TYPE_TREND,
-                            cat + " expenses increased significantly",
+                            cat + " Spending Increased",
                             String.format(Locale.getDefault(),
-                                    "%s expenses rose by %.0f%% compared to last month.", cat, change),
+                                    "You spent %.0f%% more on %s versus the same period last month.", change, cat.toLowerCase()),
                             getCategoryIcon(cat),
-                            2
+                            1
                     );
                     insight.setCategory(cat);
                     insight.setPercentageChange(change);
@@ -97,7 +98,7 @@ public class AiEngine {
         // 3. Budget alert
         if (totalBudget > 0) {
             double percentUsed = (currentTotal / totalBudget) * 100;
-            if (percentUsed >= 90 && percentUsed < 100) {
+            if (percentUsed >= 80 && percentUsed < 100) {
                 insights.add(new AiInsight(
                         AiInsight.TYPE_PREDICTION,
                         "Budget Almost Exhausted",
@@ -233,6 +234,15 @@ public class AiEngine {
         return false;
     }
 
+    private static List<Expense> filterThroughDay(List<Expense> expenses, int dayOfMonth) {
+        List<Expense> comparable = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        for (Expense expense : expenses) {
+            calendar.setTimeInMillis(expense.getDate());
+            if (calendar.get(Calendar.DAY_OF_MONTH) <= dayOfMonth) comparable.add(expense);
+        }
+        return comparable;
+    }
     private static double sumExpenses(List<Expense> expenses) {
         double total = 0;
         for (Expense e : expenses) total += e.getAmount();

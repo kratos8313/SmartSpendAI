@@ -24,7 +24,6 @@ public class ExpenseViewModel extends AndroidViewModel {
         super(application);
         repository = new ExpenseRepository(application);
         repository.fetchAndSyncFromFirestore();
-        repository.syncPendingExpenses();
     }
 
     public void insertExpense(Expense expense) {
@@ -101,6 +100,13 @@ public class ExpenseViewModel extends AndroidViewModel {
     public LiveData<Double> getWeeklyTotal(int weeksAgo) {
         long[] range = DateUtils.getWeekRange(weeksAgo);
         return repository.getTotalInRange(range[0], range[1]);
+    }
+
+    public LiveData<String> getSyncError() { return repository.getSyncError(); }
+
+    @Override
+    protected void onCleared() {
+        repository.close();
     }
 
     public MutableLiveData<String> getSearchQuery() { return searchQuery; }

@@ -40,4 +40,11 @@ public class BudgetViewModel extends AndroidViewModel {
     public LiveData<Budget> getBudgetForMonth(int month, int year) {
         return repository.getBudgetForMonth(month, year);
     }
+
+    public LiveData<String> getSyncError() { return repository.getSyncError(); }
+
+    @Override
+    protected void onCleared() {
+        repository.close();
+    }
 }

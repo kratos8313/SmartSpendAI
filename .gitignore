@@ -8,9 +8,13 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
+/build/
+**/build/
 /captures
 .externalNativeBuild
 .cxx
 /google-services.json
+**/google-services*.json
 *.hprof
+.gradle-*/
+.android-home/

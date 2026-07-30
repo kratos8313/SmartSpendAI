@@ -34,7 +34,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/content_description_category_icon"
-                android:tint="@color/colorOnPrimary" />
+                app:tint="@color/colorOnPrimary" />
         </androidx.cardview.widget.CardView>
 
         <!-- Details -->

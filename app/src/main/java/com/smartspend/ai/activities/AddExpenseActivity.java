@@ -25,6 +25,7 @@ import com.smartspend.ai.databinding.ActivityAddExpenseBinding;
 import com.smartspend.ai.models.Expense;
 import com.smartspend.ai.utils.CategoryUtils;
 import com.smartspend.ai.utils.DateUtils;
+import com.smartspend.ai.utils.MoneyUtils;
 import com.smartspend.ai.viewmodels.ExpenseViewModel;
 
 import java.util.ArrayList;
@@ -86,7 +87,12 @@ public class AddExpenseActivity extends AppCompatActivity {
             double scannedAmount = getIntent().getDoubleExtra("amount", 0);
             String scannedMerchant = getIntent().getStringExtra("merchant");
             String scannedCategory = getIntent().getStringExtra("category");
+            long scannedDate = getIntent().getLongExtra("date", 0);
 
+            if (scannedDate > 0) {
+                selectedDate = scannedDate;
+                updateDateDisplay();
+            }
             if (scannedAmount > 0) {
                 binding.etAmount.setText(String.format(Locale.getDefault(), "%.2f", scannedAmount));
             }
@@ -189,6 +195,10 @@ public class AddExpenseActivity extends AppCompatActivity {
             amount = Double.parseDouble(amountStr);
         } catch (NumberFormatException e) {
             binding.tilAmount.setError("Invalid amount");
+            return;
+        }
+        if (!MoneyUtils.isPositive(amount)) {
+            binding.tilAmount.setError("Amount must be greater than zero");
             return;
         }
 

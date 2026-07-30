@@ -104,11 +104,8 @@ public class DashboardFragment extends Fragment {
         binding.tvSeeAll.setOnClickListener(v -> {
             // Navigate to expenses tab
             if (getActivity() != null) {
-                ((com.smartspend.ai.activities.MainActivity) getActivity())
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new ExpensesFragment())
-                        .commit();
+                ((com.smartspend.ai.activities.MainActivity) getActivity()).navigateToExpenses();
+
             }
         });
     }

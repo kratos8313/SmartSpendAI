@@ -1,12 +1,18 @@
 package com.smartspend.ai.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.Manifest;
+import android.os.Build;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private Fragment currentFragment;
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {});
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        requestNotificationPermission();
         setupBottomNavigation();
         setupFab();
 
@@ -44,11 +53,20 @@ public class MainActivity extends AppCompatActivity {
         String navigateTo = getIntent().getStringExtra("navigate_to");
         if ("analytics".equals(navigateTo)) {
             binding.bottomNav.setSelectedItemId(R.id.nav_analytics);
+        } else if ("add_expense".equals(navigateTo)) {
+            startActivity(new Intent(this, AddExpenseActivity.class));
+            loadFragment(new DashboardFragment());
         } else {
             loadFragment(new DashboardFragment());
         }
     }
 
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
     private void setupBottomNavigation() {
         binding.bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -75,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void navigateToExpenses() {
+        binding.bottomNav.setSelectedItemId(R.id.nav_expenses);
+    }
     private void loadFragment(Fragment fragment) {
         if (currentFragment != null && currentFragment.getClass() == fragment.getClass()) return;
         currentFragment = fragment;

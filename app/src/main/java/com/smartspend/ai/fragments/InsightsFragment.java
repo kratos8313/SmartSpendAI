@@ -34,6 +34,8 @@ public class InsightsFragment extends Fragment {
     private List<Expense> currentMonthExpenses = new ArrayList<>();
     private List<Expense> lastMonthExpenses = new ArrayList<>();
     private double currentBudget = 0;
+    private double currentTotal = 0;
+    private double lastTotal = 0;
 
     @Nullable
     @Override
@@ -77,28 +79,28 @@ public class InsightsFragment extends Fragment {
         });
 
         expenseViewModel.getCurrentMonthTotal().observe(getViewLifecycleOwner(), total -> {
-            double amount = total != null ? total : 0;
-            binding.tvCurrentSpend.setText(CurrencyUtils.formatAmount(amount));
+            currentTotal = total != null ? total : 0;
+            binding.tvCurrentSpend.setText(CurrencyUtils.formatAmount(currentTotal));
+            updateSpendingChange();
         });
 
         expenseViewModel.getLastMonthTotal().observe(getViewLifecycleOwner(), total -> {
-            double amount = total != null ? total : 0;
-            binding.tvLastMonthSpend.setText(CurrencyUtils.formatAmount(amount));
-
-            expenseViewModel.getCurrentMonthTotal().observe(getViewLifecycleOwner(), currentTotal -> {
-                double current = currentTotal != null ? currentTotal : 0;
-                if (amount > 0) {
-                    double change = ((current - amount) / amount) * 100;
-                    binding.tvSpendingChange.setText(String.format(Locale.getDefault(),
-                            "%+.0f%%", change));
-                    binding.tvSpendingChange.setTextColor(requireContext().getColor(
-                            change > 0 ? com.smartspend.ai.R.color.expense_red
-                                    : com.smartspend.ai.R.color.expense_green));
-                }
-            });
+            lastTotal = total != null ? total : 0;
+            binding.tvLastMonthSpend.setText(CurrencyUtils.formatAmount(lastTotal));
+            updateSpendingChange();
         });
     }
 
+    private void updateSpendingChange() {
+        if (lastTotal <= 0) {
+            binding.tvSpendingChange.setText("—");
+            return;
+        }
+        double change = ((currentTotal - lastTotal) / lastTotal) * 100;
+        binding.tvSpendingChange.setText(String.format(Locale.getDefault(), "%+.0f%%", change));
+        binding.tvSpendingChange.setTextColor(requireContext().getColor(
+                change > 0 ? com.smartspend.ai.R.color.expense_red : com.smartspend.ai.R.color.expense_green));
+    }
     private void updateStats() {
         int count = currentMonthExpenses.size();
         binding.tvExpenseCount.setText(count + " expenses");
