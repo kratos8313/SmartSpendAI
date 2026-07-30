@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
 import com.smartspend.ai.utils.MoneyUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 
 @Entity(tableName = "budgets")
 public class Budget {
@@ -44,25 +45,25 @@ public class Budget {
     public void setUserId(String userId) { this.userId = userId; }
 
     public double getTotalBudget() { return totalBudget; }
-    public void setTotalBudget(double totalBudget) { this.totalBudget = MoneyUtils.nonNegative(totalBudget); }
+    public void setTotalBudget(double totalBudget) { this.totalBudget = MoneyUtils.nonNegative(totalBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getFoodBudget() { return foodBudget; }
-    public void setFoodBudget(double foodBudget) { this.foodBudget = MoneyUtils.nonNegative(foodBudget); }
+    public void setFoodBudget(double foodBudget) { this.foodBudget = MoneyUtils.nonNegative(foodBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getTravelBudget() { return travelBudget; }
-    public void setTravelBudget(double travelBudget) { this.travelBudget = MoneyUtils.nonNegative(travelBudget); }
+    public void setTravelBudget(double travelBudget) { this.travelBudget = MoneyUtils.nonNegative(travelBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getShoppingBudget() { return shoppingBudget; }
-    public void setShoppingBudget(double shoppingBudget) { this.shoppingBudget = MoneyUtils.nonNegative(shoppingBudget); }
+    public void setShoppingBudget(double shoppingBudget) { this.shoppingBudget = MoneyUtils.nonNegative(shoppingBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getBillsBudget() { return billsBudget; }
-    public void setBillsBudget(double billsBudget) { this.billsBudget = MoneyUtils.nonNegative(billsBudget); }
+    public void setBillsBudget(double billsBudget) { this.billsBudget = MoneyUtils.nonNegative(billsBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getEntertainmentBudget() { return entertainmentBudget; }
-    public void setEntertainmentBudget(double entertainmentBudget) { this.entertainmentBudget = MoneyUtils.nonNegative(entertainmentBudget); }
+    public void setEntertainmentBudget(double entertainmentBudget) { this.entertainmentBudget = MoneyUtils.nonNegative(entertainmentBudget, CurrencyUtils.getAccountCurrency()); }
 
     public double getHealthcareBudget() { return healthcareBudget; }
-    public void setHealthcareBudget(double healthcareBudget) { this.healthcareBudget = MoneyUtils.nonNegative(healthcareBudget); }
+    public void setHealthcareBudget(double healthcareBudget) { this.healthcareBudget = MoneyUtils.nonNegative(healthcareBudget, CurrencyUtils.getAccountCurrency()); }
 
     public int getMonth() { return month; }
     public void setMonth(int month) { this.month = month; }

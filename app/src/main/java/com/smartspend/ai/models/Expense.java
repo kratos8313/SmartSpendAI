@@ -33,6 +33,9 @@ public class Expense {
     private String currency;
     private double originalAmount;
     private String originalCurrency;
+    private double exchangeRate;
+    private long exchangeRateTimestamp;
+    private String exchangeRateSource;
     private long updatedAt;
     private boolean deleted;
 
@@ -40,6 +43,8 @@ public class Expense {
         this.id = java.util.UUID.randomUUID().toString();
         this.date = System.currentTimeMillis();
         this.currency = CurrencyUtils.getAccountCurrency();
+        this.exchangeRate = 1.0;
+        this.exchangeRateSource = "identity";
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
@@ -50,7 +55,8 @@ public class Expense {
                    String location, String tags, long date) {
         this.id = id;
         this.userId = userId;
-        this.amount = MoneyUtils.normalize(amount);
+        this.currency = CurrencyUtils.getAccountCurrency();
+        this.amount = MoneyUtils.normalize(amount, this.currency);
         this.category = category;
         this.title = title;
         this.notes = notes;
@@ -58,7 +64,8 @@ public class Expense {
         this.location = location;
         this.tags = tags;
         this.date = date;
-        this.currency = CurrencyUtils.getAccountCurrency();
+        this.exchangeRate = 1.0;
+        this.exchangeRateSource = "identity";
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
@@ -73,7 +80,7 @@ public class Expense {
     public void setUserId(String userId) { this.userId = userId; }
 
     public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = MoneyUtils.normalize(amount); }
+    public void setAmount(double amount) { if (!Double.isFinite(amount)) throw new IllegalArgumentException("Amount must be finite"); this.amount = amount; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
@@ -106,10 +113,19 @@ public class Expense {
     public void setCurrency(String currency) { this.currency = currency == null || currency.isBlank() ? CurrencyUtils.getAccountCurrency() : currency; }
 
     public double getOriginalAmount() { return originalAmount; }
-    public void setOriginalAmount(double originalAmount) { this.originalAmount = originalAmount; }
+    public void setOriginalAmount(double originalAmount) { if (!Double.isFinite(originalAmount)) throw new IllegalArgumentException("Amount must be finite"); this.originalAmount = originalAmount; }
 
     public String getOriginalCurrency() { return originalCurrency; }
     public void setOriginalCurrency(String originalCurrency) { this.originalCurrency = originalCurrency; }
+
+    public double getExchangeRate() { return exchangeRate; }
+    public void setExchangeRate(double exchangeRate) { this.exchangeRate = exchangeRate; }
+
+    public long getExchangeRateTimestamp() { return exchangeRateTimestamp; }
+    public void setExchangeRateTimestamp(long exchangeRateTimestamp) { this.exchangeRateTimestamp = exchangeRateTimestamp; }
+
+    public String getExchangeRateSource() { return exchangeRateSource; }
+    public void setExchangeRateSource(String exchangeRateSource) { this.exchangeRateSource = exchangeRateSource; }
 
     public long getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }

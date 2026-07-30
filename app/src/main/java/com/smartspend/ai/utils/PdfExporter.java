@@ -53,13 +53,16 @@ public final class PdfExporter {
                 y += 10;
             }
             canvas.drawText("Date", 40, y, header); canvas.drawText("Description", 130, y, header);
-            canvas.drawText("Category", 350, y, header); canvas.drawText("Amount", 465, y, header); y += 22;
+            canvas.drawText("Category", 350, y, header); canvas.drawText("Entered", 465, y, header); y += 22;
             while (index < safeExpenses.size() && y < 800) {
                 Expense expense = safeExpenses.get(index++);
                 canvas.drawText(DateUtils.formatShortDate(expense.getDate()), 40, y, text);
                 canvas.drawText(ellipsize(expense.getTitle(), 28), 130, y, text);
                 canvas.drawText(ellipsize(expense.getCategory(), 14), 350, y, text);
-                canvas.drawText(CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency()), 465, y, text);
+                String enteredAmount = expense.getOriginalAmount() > 0 && expense.getOriginalCurrency() != null
+                        ? CurrencyUtils.formatAmount(expense.getOriginalAmount(), expense.getOriginalCurrency())
+                        : CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency());
+                canvas.drawText(enteredAmount, 465, y, text);
                 y += 20;
             }
             canvas.drawText("Page " + pageNumber, 510, 825, text);

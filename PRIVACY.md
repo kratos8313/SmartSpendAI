@@ -8,11 +8,11 @@ SmartSpend AI may process account identifiers, email address, display name, expe
 
 ## Purpose
 
-The data is used to authenticate users, store and synchronize their financial records, scan receipts, generate rule-based spending insights, display analytics, send local reminders, and export reports requested by the user.
+The data is used to authenticate users, store and synchronize their financial records, scan receipts, generate spending insights and optional aggregate-only AI summaries, display analytics, send local reminders, and export reports requested by the user.
 
 ## Storage and sharing
 
-Expense and budget records are stored locally with Room and, when configured, synchronized to the publisher's Firebase project. Authentication is provided by Firebase Authentication and cloud records by Cloud Firestore. Receipt OCR is performed with Google ML Kit. PDF reports are created locally and shared only through an app selected by the user.
+Expense and budget records are stored locally with Room and, when configured, synchronized to the publisher's Firebase project. Authentication is provided by Firebase Authentication and cloud records by Cloud Firestore. Receipt OCR is performed with Google ML Kit. PDF reports are created locally and shared only through an app selected by the user. For foreign-currency expenses, the app sends only the source currency code, account currency code, and requested date to the configured Frankfurter reference-rate endpoint; expense amounts, titles, notes, and identities are not sent to that service. As with any internet request, the service and its delivery network may receive connection metadata such as the device IP address.
 
 The publisher should document Firebase/Google as a service provider, its retention settings, hosting region, and any additional analytics enabled in the production build.
 

@@ -41,7 +41,7 @@ Only monthly totals, budget, count, currency code, and category totals are sent 
 
 ## Currency behavior
 
-Settings offers INR, USD, EUR, GBP, JPY, CAD, AUD, SGD, and AED. The choice controls budgets, dashboard totals, reports, and new expenses. Existing expenses retain their stored currency and are not silently exchange-rate converted. A future multi-currency conversion feature should store the rate, rate timestamp, source, and original amount before combining currencies.
+Settings selects the account currency used by budgets, dashboard totals, analytics, and reports. Every expense has its own searchable ISO currency selector populated from the Android currency database. Foreign expenses preserve the entered amount and currency, while a separate converted amount is stored in the account currency using a blended daily reference rate for the expense date. The rate, effective date, and source are stored with the record. Same-day rates are cached for offline retries; when no valid rate is available, the app does not save or silently add an unconverted value to totals. Changing the account currency revalues existing expenses from their preserved original amounts and converts the current budget only after all required rates have been obtained.
 
 ## OCR quality validation
 
@@ -55,11 +55,12 @@ Before publishing to an app store:
 1. Set a unique production application ID if this package is not final.
 2. Configure a private release signing key outside the repository.
 3. Add the production SHA-256 certificate fingerprint in Firebase.
-4. Deploy the included Firestore rules and enable Firebase budget/usage alerts.
-5. Provide a hosted privacy policy based on PRIVACY.md, a support address, and store disclosures.
-6. Test database migration from version 1, offline edits, sync retries, notifications, biometrics, OCR, and PDF sharing on physical devices.
-7. Run: ./gradlew testDebugUnitTest lintRelease assembleRelease
-8. Review the generated release bundle with Play Console pre-launch reports.
+4. Release the updated app and deploy the included Firestore rules as a coordinated rollout; the stricter expense schema requires the new exchange-rate fields. Enable Firebase budget/usage alerts.
+5. Review the exchange-rate provider terms and availability; self-host or use a contracted provider if the production SLA requires it. Rates are daily references, not executable trading quotes.
+6. Provide a hosted privacy policy based on PRIVACY.md, a support address, and store disclosures.
+7. Test database migration from version 1, offline edits, sync retries, notifications, biometrics, OCR, and PDF sharing on physical devices.
+8. Run: ./gradlew testDebugUnitTest lintRelease assembleRelease
+9. Review the generated release bundle with Play Console pre-launch reports.
 
 Release builds enable code shrinking and resource shrinking. Financial data is excluded from Android cloud backup.
 

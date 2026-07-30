@@ -32,20 +32,25 @@ service cloud.firestore {
       let data = request.resource.data;
       return data.keys().hasAll(['id', 'userId', 'amount', 'category', 'title', 'notes',
           'paymentMode', 'location', 'tags', 'date', 'receiptImagePath', 'synced',
-          'currency', 'originalAmount', 'originalCurrency', 'updatedAt', 'deleted'])
+          'currency', 'originalAmount', 'originalCurrency', 'exchangeRate',
+          'exchangeRateTimestamp', 'exchangeRateSource', 'updatedAt', 'deleted'])
         && data.keys().hasOnly(['id', 'userId', 'amount', 'category', 'title', 'notes',
           'paymentMode', 'location', 'tags', 'date', 'receiptImagePath', 'synced',
-          'currency', 'originalAmount', 'originalCurrency', 'updatedAt', 'deleted'])
+          'currency', 'originalAmount', 'originalCurrency', 'exchangeRate',
+          'exchangeRateTimestamp', 'exchangeRateSource', 'updatedAt', 'deleted'])
         && data.userId == userId
         && data.id is string && data.id.size() > 0 && data.id.size() <= 128
         && validMoney(data.amount, false) && validMoney(data.originalAmount, true)
+        && data.exchangeRate is number && data.exchangeRate > 0
+        && data.exchangeRateTimestamp is int
         && data.date is int && data.updatedAt is int
         && data.deleted is bool && data.synced is bool
         && validText(data.category, 40) && validText(data.title, 200)
         && validText(data.notes, 2000) && validText(data.tags, 500)
         && validText(data.location, 500) && validText(data.paymentMode, 40)
         && validText(data.receiptImagePath, 1000)
-        && validText(data.currency, 3) && validText(data.originalCurrency, 3);
+        && validText(data.currency, 3) && validText(data.originalCurrency, 3)
+        && validText(data.exchangeRateSource, 120);
     }
 
     function validBudget(userId) {

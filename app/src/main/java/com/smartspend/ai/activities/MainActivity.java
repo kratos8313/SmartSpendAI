@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.smartspend.ai.R;
 import com.smartspend.ai.databinding.ActivityMainBinding;
 import com.smartspend.ai.fragments.AnalyticsFragment;
@@ -24,11 +25,13 @@ import com.smartspend.ai.fragments.BudgetFragment;
 import com.smartspend.ai.fragments.DashboardFragment;
 import com.smartspend.ai.fragments.ExpensesFragment;
 import com.smartspend.ai.fragments.InsightsFragment;
+import com.smartspend.ai.utils.CurrencyUtils;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private Fragment currentFragment;
+    private boolean mainUiStarted;
     private final ActivityResultLauncher<String> notificationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {});
 
@@ -45,22 +48,37 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        loadAccountCurrencyThenStart();
+    }
+
+    private void loadAccountCurrencyThenStart() {
+        var user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).get()
+                .addOnSuccessListener(document -> {
+                    String currency = document.getString("currency");
+                    if (currency != null) {
+                        try { CurrencyUtils.setAccountCurrency(this, currency); }
+                        catch (IllegalArgumentException ignored) { }
+                    }
+                    startMainUi();
+                })
+                .addOnFailureListener(error -> startMainUi());
+    }
+
+    private void startMainUi() {
+        if (mainUiStarted || isFinishing()) return;
+        mainUiStarted = true;
         requestNotificationPermission();
         setupBottomNavigation();
         setupFab();
-
-        // Check if navigated from notification
         String navigateTo = getIntent().getStringExtra("navigate_to");
-        if ("analytics".equals(navigateTo)) {
-            binding.bottomNav.setSelectedItemId(R.id.nav_analytics);
-        } else if ("add_expense".equals(navigateTo)) {
+        if ("analytics".equals(navigateTo)) binding.bottomNav.setSelectedItemId(R.id.nav_analytics);
+        else if ("add_expense".equals(navigateTo)) {
             startActivity(new Intent(this, AddExpenseActivity.class));
             loadFragment(new DashboardFragment());
-        } else {
-            loadFragment(new DashboardFragment());
-        }
+        } else loadFragment(new DashboardFragment());
     }
-
     private void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

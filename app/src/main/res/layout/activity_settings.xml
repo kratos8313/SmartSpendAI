@@ -251,9 +251,10 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:layout_margin="12dp" android:hint="Account display currency"
-                    app:helperText="Used for budgets and new expenses; changing it does not convert stored values">
+                    app:helperText="Used for totals and budgets; changing it revalues existing expenses from their original amounts">
                     <AutoCompleteTextView android:id="@+id/actv_currency" android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:inputType="none" />
+                        android:layout_height="wrap_content" android:inputType="textCapCharacters"
+                    android:completionThreshold="1" />
                 </com.google.android.material.textfield.TextInputLayout>
             </com.google.android.material.card.MaterialCardView>
             <!-- Data -->

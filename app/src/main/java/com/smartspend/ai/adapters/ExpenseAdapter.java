@@ -73,7 +73,14 @@ public class ExpenseAdapter extends ListAdapter<Expense, ExpenseAdapter.ExpenseV
 
         void bind(Expense expense) {
             binding.tvExpenseTitle.setText(expense.getTitle());
-            binding.tvExpenseAmount.setText(CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency()));
+            boolean converted = expense.getOriginalAmount() > 0 && expense.getOriginalCurrency() != null;
+            String entered = converted
+                    ? CurrencyUtils.formatAmount(expense.getOriginalAmount(), expense.getOriginalCurrency())
+                    : CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency());
+            if (converted && !expense.getOriginalCurrency().equals(expense.getCurrency())) {
+                entered += "\n≈ " + CurrencyUtils.formatAmount(expense.getAmount(), expense.getCurrency());
+            }
+            binding.tvExpenseAmount.setText(entered);
             binding.tvExpenseDate.setText(DateUtils.getRelativeDate(expense.getDate()));
             binding.tvExpenseCategory.setText(expense.getCategory());
             binding.tvPaymentMode.setText(expense.getPaymentMode());

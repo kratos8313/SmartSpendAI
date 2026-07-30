@@ -27,6 +27,7 @@ import com.smartspend.ai.utils.CategoryUtils;
 import com.smartspend.ai.utils.DateUtils;
 import com.smartspend.ai.utils.CurrencyUtils;
 import com.smartspend.ai.utils.MoneyUtils;
+import com.smartspend.ai.utils.FxRateService;
 import com.smartspend.ai.viewmodels.ExpenseViewModel;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     private String editExpenseId = null;
     private Expense existingExpense;
     private String selectedCurrency;
+    private List<String> currencyCodes;
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {});
@@ -66,9 +68,8 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         selectedCurrency = getIntent().getStringExtra("currency");
-        if (selectedCurrency == null || selectedCurrency.isBlank()) selectedCurrency = CurrencyUtils.getAccountCurrency();
-        updateAmountHint();
-
+        try { selectedCurrency = CurrencyUtils.codeFromDisplayName(selectedCurrency); }
+        catch (IllegalArgumentException ignored) { selectedCurrency = CurrencyUtils.getAccountCurrency(); }
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,6 +77,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         setupCategoryChips();
         setupPaymentDropdown();
+        setupCurrencyDropdown();
         setupDatePicker();
         setupButtons();
 
@@ -99,7 +101,7 @@ public class AddExpenseActivity extends AppCompatActivity {
                 updateDateDisplay();
             }
             if (scannedAmount > 0) {
-                binding.etAmount.setText(String.format(Locale.getDefault(), "%.2f", scannedAmount));
+                binding.etAmount.setText(CurrencyUtils.formatInputAmount(scannedAmount, selectedCurrency));
             }
             if (scannedMerchant != null && !scannedMerchant.isEmpty()) {
                 binding.etTitle.setText(scannedMerchant);
@@ -112,6 +114,20 @@ public class AddExpenseActivity extends AppCompatActivity {
 
     private void updateAmountHint() {
         binding.tilAmount.setHint("Amount (" + CurrencyUtils.getSymbol(selectedCurrency) + ")");
+        binding.actvExpenseCurrency.setText(CurrencyUtils.getDisplayName(selectedCurrency), false);
+    }
+
+    private void setupCurrencyDropdown() {
+        currencyCodes = java.util.Arrays.asList(CurrencyUtils.getSupportedCodes());
+        String[] labels = currencyCodes.stream().map(CurrencyUtils::getDisplayName).toArray(String[]::new);
+        binding.actvExpenseCurrency.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, labels));
+        binding.actvExpenseCurrency.setOnItemClickListener((parent, view, position, id) -> {
+            selectedCurrency = CurrencyUtils.codeFromDisplayName(parent.getItemAtPosition(position));
+            binding.tilExpenseCurrency.setHelperText("Foreign amounts are converted to your account currency for totals");
+            updateAmountHint();
+        });
+        updateAmountHint();
     }
 
     private void setupCategoryChips() {
@@ -187,43 +203,60 @@ public class AddExpenseActivity extends AppCompatActivity {
     }
 
     private void saveExpense() {
-        String amountStr = binding.etAmount.getText() != null ? binding.etAmount.getText().toString().trim() : "";
-        String title = binding.etTitle.getText() != null ? binding.etTitle.getText().toString().trim() : "";
-
-        if (TextUtils.isEmpty(amountStr)) {
-            binding.tilAmount.setError("Please enter an amount");
+        try { selectedCurrency = CurrencyUtils.codeFromDisplayName(binding.actvExpenseCurrency.getText()); }
+        catch (IllegalArgumentException error) {
+            binding.tilExpenseCurrency.setError("Choose a currency from the list");
             return;
         }
-        if (TextUtils.isEmpty(title)) {
-            binding.tilTitle.setError("Please enter a title");
-            return;
-        }
+        binding.tilExpenseCurrency.setError(null);
+        String amountText = binding.etAmount.getText() == null ? "" : binding.etAmount.getText().toString().trim();
+        String title = binding.etTitle.getText() == null ? "" : binding.etTitle.getText().toString().trim();
+        if (TextUtils.isEmpty(amountText)) { binding.tilAmount.setError("Please enter an amount"); return; }
+        if (TextUtils.isEmpty(title)) { binding.tilTitle.setError("Please enter a title"); return; }
+        double enteredAmount;
+        try { enteredAmount = Double.parseDouble(amountText); }
+        catch (NumberFormatException error) { binding.tilAmount.setError("Invalid amount"); return; }
+        if (!MoneyUtils.isPositive(enteredAmount)) { binding.tilAmount.setError("Amount must be greater than zero"); return; }
 
-        double amount;
-        try {
-            amount = Double.parseDouble(amountStr);
-        } catch (NumberFormatException e) {
-            binding.tilAmount.setError("Invalid amount");
-            return;
-        }
-        if (!MoneyUtils.isPositive(amount)) {
-            binding.tilAmount.setError("Amount must be greater than zero");
-            return;
-        }
-
-        Expense expense = editExpenseId != null && existingExpense != null ?
-                existingExpense : new Expense();
-
-        expense.setAmount(amount);
-        expense.setCurrency(selectedCurrency);
+        Expense expense = editExpenseId != null && existingExpense != null ? existingExpense : new Expense();
         expense.setTitle(title);
         expense.setCategory(selectedCategory);
         expense.setDate(selectedDate);
         expense.setPaymentMode(binding.actvPaymentMode.getText().toString());
-        expense.setNotes(binding.etNotes.getText() != null ? binding.etNotes.getText().toString().trim() : "");
-        expense.setLocation(binding.etLocation.getText() != null ? binding.etLocation.getText().toString().trim() : "");
-        expense.setTags(binding.etTags.getText() != null ? binding.etTags.getText().toString().trim() : "");
+        expense.setNotes(binding.etNotes.getText() == null ? "" : binding.etNotes.getText().toString().trim());
+        expense.setLocation(binding.etLocation.getText() == null ? "" : binding.etLocation.getText().toString().trim());
+        expense.setTags(binding.etTags.getText() == null ? "" : binding.etTags.getText().toString().trim());
+        expense.setOriginalCurrency(selectedCurrency);
+        expense.setOriginalAmount(MoneyUtils.normalize(enteredAmount, selectedCurrency));
 
+        String accountCurrency = CurrencyUtils.getAccountCurrency();
+        if (selectedCurrency.equals(accountCurrency)) {
+            applyRateAndPersist(expense, enteredAmount, 1.0, selectedDate, "identity");
+            return;
+        }
+        setConversionLoading(true);
+        FxRateService.getRate(this, selectedCurrency, accountCurrency, selectedDate, new FxRateService.Callback() {
+            @Override public void onSuccess(FxRateService.Rate rate) {
+                long rateTimestamp = selectedDate;
+                try { rateTimestamp = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(rate.date).getTime(); }
+                catch (Exception ignored) { }
+                String source = "Frankfurter blended daily reference rates" + (rate.cached ? " (cached)" : "");
+                applyRateAndPersist(expense, enteredAmount, rate.value, rateTimestamp, source);
+            }
+            @Override public void onFailure(String message) {
+                setConversionLoading(false);
+                Toast.makeText(AddExpenseActivity.this, message + " The expense was not saved.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void applyRateAndPersist(Expense expense, double enteredAmount, double rate,
+            long rateTimestamp, String source) {
+        expense.setCurrency(CurrencyUtils.getAccountCurrency());
+        expense.setAmount(MoneyUtils.normalize(enteredAmount * rate, CurrencyUtils.getAccountCurrency()));
+        expense.setExchangeRate(rate);
+        expense.setExchangeRateTimestamp(rateTimestamp);
+        expense.setExchangeRateSource(source);
         if (editExpenseId != null) {
             viewModel.updateExpense(expense);
             Toast.makeText(this, "Expense updated!", Toast.LENGTH_SHORT).show();
@@ -231,13 +264,19 @@ public class AddExpenseActivity extends AppCompatActivity {
             viewModel.insertExpense(expense);
             Toast.makeText(this, "Expense added!", Toast.LENGTH_SHORT).show();
         }
-
+        setConversionLoading(false);
         finish();
         overridePendingTransition(R.anim.fade_in_fast, R.anim.slide_down);
     }
 
+    private void setConversionLoading(boolean loading) {
+        binding.btnSaveExpense.setEnabled(!loading);
+        binding.btnSaveExpense.setText(loading ? "Converting..." : "Save Expense");
+    }
     private void openReceiptScanner() {
-        startActivity(new Intent(this, ReceiptScannerActivity.class));
+        Intent scanner = new Intent(this, ReceiptScannerActivity.class);
+        scanner.putExtra("currency", selectedCurrency);
+        startActivity(scanner);
     }
 
     private void startVoiceInput() {
@@ -280,9 +319,17 @@ public class AddExpenseActivity extends AppCompatActivity {
         viewModel.getExpenseById(editExpenseId).observe(this, expense -> {
             if (expense != null) {
                 existingExpense = expense;
-                selectedCurrency = expense.getCurrency() == null ? CurrencyUtils.getAccountCurrency() : expense.getCurrency();
+                boolean hasOriginal = expense.getOriginalAmount() > 0 && expense.getOriginalCurrency() != null;
+                selectedCurrency = hasOriginal ? expense.getOriginalCurrency() : expense.getCurrency();
+                if (selectedCurrency == null) selectedCurrency = CurrencyUtils.getAccountCurrency();
                 updateAmountHint();
-                binding.etAmount.setText(String.format(Locale.getDefault(), "%.2f", expense.getAmount()));
+                binding.etAmount.setText(CurrencyUtils.formatInputAmount(
+                        hasOriginal ? expense.getOriginalAmount() : expense.getAmount(), selectedCurrency));
+                if (hasOriginal && !selectedCurrency.equals(expense.getCurrency()) && expense.getExchangeRate() > 0) {
+                    binding.tilExpenseCurrency.setHelperText(String.format(Locale.US,
+                            "Stored rate: 1 %s = %.6f %s · %s", selectedCurrency, expense.getExchangeRate(),
+                            expense.getCurrency(), DateUtils.formatDate(expense.getExchangeRateTimestamp())));
+                }
                 binding.etTitle.setText(expense.getTitle());
                 binding.etNotes.setText(expense.getNotes());
                 binding.etLocation.setText(expense.getLocation());
