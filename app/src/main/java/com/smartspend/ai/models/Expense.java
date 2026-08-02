@@ -1,6 +1,7 @@
 package com.smartspend.ai.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
@@ -50,6 +51,7 @@ public class Expense {
         this.deleted = false;
     }
 
+    @Ignore
     public Expense(String id, String userId, double amount, String category,
                    String title, String notes, String paymentMode,
                    String location, String tags, long date) {
