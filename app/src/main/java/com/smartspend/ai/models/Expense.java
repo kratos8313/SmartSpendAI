@@ -1,10 +1,12 @@
 package com.smartspend.ai.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
 import com.smartspend.ai.utils.MoneyUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
@@ -32,24 +34,31 @@ public class Expense {
     private String currency;
     private double originalAmount;
     private String originalCurrency;
+    private double exchangeRate;
+    private long exchangeRateTimestamp;
+    private String exchangeRateSource;
     private long updatedAt;
     private boolean deleted;
 
     public Expense() {
         this.id = java.util.UUID.randomUUID().toString();
         this.date = System.currentTimeMillis();
-        this.currency = "INR";
+        this.currency = CurrencyUtils.getAccountCurrency();
+        this.exchangeRate = 1.0;
+        this.exchangeRateSource = "identity";
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
     }
 
+    @Ignore
     public Expense(String id, String userId, double amount, String category,
                    String title, String notes, String paymentMode,
                    String location, String tags, long date) {
         this.id = id;
         this.userId = userId;
-        this.amount = MoneyUtils.normalize(amount);
+        this.currency = CurrencyUtils.getAccountCurrency();
+        this.amount = MoneyUtils.normalize(amount, this.currency);
         this.category = category;
         this.title = title;
         this.notes = notes;
@@ -57,7 +66,8 @@ public class Expense {
         this.location = location;
         this.tags = tags;
         this.date = date;
-        this.currency = "INR";
+        this.exchangeRate = 1.0;
+        this.exchangeRateSource = "identity";
         this.isSynced = false;
         this.updatedAt = System.currentTimeMillis();
         this.deleted = false;
@@ -72,7 +82,7 @@ public class Expense {
     public void setUserId(String userId) { this.userId = userId; }
 
     public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = MoneyUtils.normalize(amount); }
+    public void setAmount(double amount) { if (!Double.isFinite(amount)) throw new IllegalArgumentException("Amount must be finite"); this.amount = amount; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
@@ -102,13 +112,22 @@ public class Expense {
     public void setSynced(boolean synced) { isSynced = synced; }
 
     public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
+    public void setCurrency(String currency) { this.currency = currency == null || currency.isBlank() ? CurrencyUtils.getAccountCurrency() : currency; }
 
     public double getOriginalAmount() { return originalAmount; }
-    public void setOriginalAmount(double originalAmount) { this.originalAmount = originalAmount; }
+    public void setOriginalAmount(double originalAmount) { if (!Double.isFinite(originalAmount)) throw new IllegalArgumentException("Amount must be finite"); this.originalAmount = originalAmount; }
 
     public String getOriginalCurrency() { return originalCurrency; }
     public void setOriginalCurrency(String originalCurrency) { this.originalCurrency = originalCurrency; }
+
+    public double getExchangeRate() { return exchangeRate; }
+    public void setExchangeRate(double exchangeRate) { this.exchangeRate = exchangeRate; }
+
+    public long getExchangeRateTimestamp() { return exchangeRateTimestamp; }
+    public void setExchangeRateTimestamp(long exchangeRateTimestamp) { this.exchangeRateTimestamp = exchangeRateTimestamp; }
+
+    public String getExchangeRateSource() { return exchangeRateSource; }
+    public void setExchangeRateSource(String exchangeRateSource) { this.exchangeRateSource = exchangeRateSource; }
 
     public long getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }

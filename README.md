@@ -6,10 +6,10 @@ SmartSpend AI is an Android personal-finance app built with Java, Room, Firebase
 
 - Email/password authentication, password reset, and optional biometric app lock
 - Offline-first expense and budget storage with conflict-aware Firestore synchronization
-- Receipt scanning with sampled image decoding and merchant, amount, and date extraction
-- Rule-based spending insights using like-for-like month-to-date comparisons
+- Receipt scanning with EXIF rotation, quality warnings, confidence reporting, currency detection, and scored total extraction
+- Deterministic spending insights plus an optional Gemini monthly narrative grounded only in calculated aggregates
 - Budget threshold alerts, daily reminders, and deduplicated monthly summaries
-- Analytics, search, category filters, voice-assisted entry, dark mode, and PDF export
+- Analytics, a functional monthly report, configurable account currency, search, voice-assisted entry, dark mode, and PDF export
 - Room database migration support, restrictive Firestore rules, unit tests, lint, and CI
 
 ## Requirements
@@ -28,6 +28,26 @@ SmartSpend AI is an Android personal-finance app built with Java, Room, Firebase
 
 The project can compile without google-services.json for CI and static verification, but Firebase features require it at runtime.
 
+## Firebase AI setup
+
+The monthly report always works offline using deterministic calculations. To enable the optional Gemini summary:
+
+1. Add `app/google-services.json` from the Firebase project.
+2. Enable Firebase AI Logic with the Google AI backend in the Firebase console.
+3. Enable Firebase App Check. Debug builds use the App Check debug provider; register the printed debug token. Release builds use Play Integrity, so register the release SHA-256 certificate.
+4. Set Firebase AI Logic and App Check usage alerts/quotas before production rollout.
+
+Only monthly totals, budget, count, currency code, and category totals are sent to the model. Transaction titles, merchant names, notes, dates, and receipt images remain local to this feature. Model failure falls back to the local summary.
+
+## Currency behavior
+
+Settings selects the account currency used by budgets, dashboard totals, analytics, and reports. Every expense has its own searchable ISO currency selector populated from the Android currency database. Foreign expenses preserve the entered amount and currency, while a separate converted amount is stored in the account currency using a blended daily reference rate for the expense date. The rate, effective date, and source are stored with the record. Same-day rates are cached for offline retries; when no valid rate is available, the app does not save or silently add an unconverted value to totals. Changing the account currency revalues existing expenses from their preserved original amounts and converts the current budget only after all required rates have been obtained.
+
+## OCR quality validation
+
+OCR is assistive, not authoritative: users must review detected values before saving. The scanner corrects EXIF rotation, warns for low-resolution images, scores likely total lines while penalizing subtotal/tax/change lines, detects common currency markers, and exposes a field-completeness confidence score.
+
+Before each release, test at least 100 consented or synthetic receipts across currencies, merchants, lighting, crumpling, camera angles, and printed/digital formats. Track exact-match accuracy separately for amount, date, merchant, and currency, with a launch target of at least 95% amount accuracy and no silent save path. Do not include personal receipt data in the repository.
 ## Release checklist
 
 Before publishing to an app store:
@@ -35,11 +55,12 @@ Before publishing to an app store:
 1. Set a unique production application ID if this package is not final.
 2. Configure a private release signing key outside the repository.
 3. Add the production SHA-256 certificate fingerprint in Firebase.
-4. Deploy the included Firestore rules and enable Firebase budget/usage alerts.
-5. Provide a hosted privacy policy based on PRIVACY.md, a support address, and store disclosures.
-6. Test database migration from version 1, offline edits, sync retries, notifications, biometrics, OCR, and PDF sharing on physical devices.
-7. Run: ./gradlew testDebugUnitTest lintRelease assembleRelease
-8. Review the generated release bundle with Play Console pre-launch reports.
+4. Release the updated app and deploy the included Firestore rules as a coordinated rollout; the stricter expense schema requires the new exchange-rate fields. Enable Firebase budget/usage alerts.
+5. Review the exchange-rate provider terms and availability; self-host or use a contracted provider if the production SLA requires it. Rates are daily references, not executable trading quotes.
+6. Provide a hosted privacy policy based on PRIVACY.md, a support address, and store disclosures.
+7. Test database migration from version 1, offline edits, sync retries, notifications, biometrics, OCR, and PDF sharing on physical devices.
+8. Run: ./gradlew testDebugUnitTest lintRelease assembleRelease
+9. Review the generated release bundle with Play Console pre-launch reports.
 
 Release builds enable code shrinking and resource shrinking. Financial data is excluded from Android cloud backup.
 

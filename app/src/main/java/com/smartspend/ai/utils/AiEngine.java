@@ -112,7 +112,7 @@ public class AiEngine {
                         AiInsight.TYPE_OVERSPENDING,
                         "Budget Exceeded!",
                         String.format(Locale.getDefault(),
-                                "You've exceeded your monthly budget by ₹%.2f. Review your spending habits.", currentTotal - totalBudget),
+                                "You've exceeded your monthly budget by %s. Review your spending habits.", CurrencyUtils.formatAmount(currentTotal - totalBudget)),
                         "alert",
                         2
                 ));
@@ -127,7 +127,7 @@ public class AiEngine {
                     AiInsight.TYPE_SAVINGS,
                     "Savings Opportunity",
                     String.format(Locale.getDefault(),
-                            "Based on your spending patterns, you could save up to ₹%.0f by reducing discretionary expenses by 15%%.", potentialSavings),
+                            "Reducing discretionary expenses by 15%% would retain about %s based on the two-month average.", CurrencyUtils.formatAmount(potentialSavings)),
                     "savings",
                     0
             ));
@@ -162,7 +162,7 @@ public class AiEngine {
                         AiInsight.TYPE_PREDICTION,
                         "Spending Forecast",
                         String.format(Locale.getDefault(),
-                                "At your current pace, you'll spend ₹%.0f this month — %.0f%% over your budget.", projectedTotal, ((projectedTotal - totalBudget) / totalBudget) * 100),
+                                "At your current pace, you'll spend %s this month — %.0f%% over your budget.", CurrencyUtils.formatAmount(projectedTotal), ((projectedTotal - totalBudget) / totalBudget) * 100),
                         "forecast",
                         1
                 ));

@@ -42,6 +42,7 @@ public class BudgetFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         budgetViewModel = new ViewModelProvider(requireActivity()).get(BudgetViewModel.class);
         expenseViewModel = new ViewModelProvider(requireActivity()).get(ExpenseViewModel.class);
+        binding.tilTotalBudget.setHint("Total Monthly Budget (" + com.smartspend.ai.utils.CurrencyUtils.getSymbol(com.smartspend.ai.utils.CurrencyUtils.getAccountCurrency()) + ")");
 
         setupSaveButton();
         observeData();

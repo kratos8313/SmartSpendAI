@@ -18,3 +18,5 @@
 *.hprof
 .gradle-*/
 .android-home/
+.android-local/
+.syntax-check/

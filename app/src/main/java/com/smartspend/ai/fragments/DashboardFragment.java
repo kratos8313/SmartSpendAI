@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.smartspend.ai.R;
 import com.smartspend.ai.activities.AddExpenseActivity;
 import com.smartspend.ai.activities.ReceiptScannerActivity;
+import com.smartspend.ai.activities.MonthlyReportActivity;
 import com.smartspend.ai.activities.SettingsActivity;
 import com.smartspend.ai.adapters.ExpenseAdapter;
 import com.smartspend.ai.adapters.InsightAdapter;
@@ -101,6 +102,9 @@ public class DashboardFragment extends Fragment {
         binding.btnSettings.setOnClickListener(v ->
                 startActivity(new Intent(requireContext(), SettingsActivity.class)));
 
+        binding.btnMonthlyReport.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), MonthlyReportActivity.class)));
+
         binding.tvSeeAll.setOnClickListener(v -> {
             // Navigate to expenses tab
             if (getActivity() != null) {
@@ -119,8 +123,8 @@ public class DashboardFragment extends Fragment {
             if (currentBudget > 0) {
                 double progress = (amount / currentBudget) * 100;
                 binding.progressBudget.setProgress((int) Math.min(progress, 100));
-                binding.tvBudgetStatus.setText(String.format(
-                        "%.0f%% of ₹%.0f budget used", progress, currentBudget));
+                binding.tvBudgetStatus.setText(String.format(java.util.Locale.getDefault(),
+                        "%.0f%% of %s budget used", progress, CurrencyUtils.formatCompact(currentBudget)));
             }
         });
 

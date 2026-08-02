@@ -7,6 +7,7 @@ import android.os.Build;
 
 import com.google.firebase.FirebaseApp;
 import com.smartspend.ai.utils.ThemeUtils;
+import com.smartspend.ai.utils.CurrencyUtils;
 import com.smartspend.ai.workers.NotificationWorker;
 
 public class SmartSpendApp extends Application {
@@ -18,7 +19,9 @@ public class SmartSpendApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FirebaseApp.initializeApp(this);
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(this);
+        if (firebaseApp != null) AppCheckInitializer.initialize();
+        CurrencyUtils.initialize(this);
         createNotificationChannels();
         ThemeUtils.applyTheme(this);
         NotificationWorker.scheduleDailyReminder(this);
